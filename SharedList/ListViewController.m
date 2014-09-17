@@ -13,55 +13,35 @@
 #import "AppDelegate.h"
 
 @interface ListViewController ()
-
 @end
 
 @implementation ListViewController
-
+// ---------------------------------------------------------------------------------------------------------------------
+#pragma mark - Lifecycle
+// ---------------------------------------------------------------------------------------------------------------------
 - (void)viewDidLoad {
     [super viewDidLoad];
 
     self.title = @"Hungerliste";
-
-    // get a reference to the database from delegate
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    self.database = appDelegate.database;
-
-    // Define a view with a map function that indexes to-do items by creation date:
-    [[self.database viewNamed: @"byDate"] setMapBlock: MAPBLOCK({
-        id date = doc[@"created_at"];
-        if (date)
-            emit(date, doc);
-    }) reduceBlock: nil version: @"1.1"];
-
-    // and a validation function requiring parseable dates:
-    [self.database setValidationNamed: @"created_at" asBlock: VALIDATIONBLOCK({
-        if (newRevision.isDeletion)
-            return;
-        id date = (newRevision.properties)[@"created_at"];
-        if (date && ! [CBLJSON dateWithJSONObject: date]) {
-            [context rejectWithMessage: [@"invalid date " stringByAppendingString: [date description]]];
-        }
-    })];
-
-
-
-    NSAssert(self.database != nil, @"Not hooked up to database yet");
-    CBLLiveQuery* query = [[[self.database viewNamed:@"byDate"] createQuery] asLiveQuery];
-    query.descending = YES;
-    self.dataSource.query = query;
+    
+    // wire the query view to the dataSource object
+    CBLLiveQuery* query     = [[[self.database viewNamed:@"byDate"] createQuery] asLiveQuery];
+    query.descending        = YES;
+    self.dataSource.query   = query;
 
     // Configure sync if necessary:
     [self updateSyncURL];
 
-
 }
 
-- (void)didReceiveMemoryWarning {
+// ---------------------------------------------------------------------------------------------------------------------
+- (void)didReceiveMemoryWarning
+{
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    self.database = nil;
 }
 
+// ---------------------------------------------------------------------------------------------------------------------
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -71,22 +51,22 @@
 }
 
 
-// Updates the database's sync URL from the saved pref.
+// ---------------------------------------------------------------------------------------------------------------------
+#pragma mark - Setup sync.
+// ---------------------------------------------------------------------------------------------------------------------
 - (void)updateSyncURL {
+
     if (!self.database)
         return;
 
-
-    NSURL* newRemoteURL = nil;
-    NSString *pref = [[NSUserDefaults standardUserDefaults] objectForKey:@"syncpoint"];
+    NSURL* newRemoteURL     = nil;
+    NSString *pref          = [[NSUserDefaults standardUserDefaults] objectForKey:@"syncpoint"];
     if (pref.length > 0)
         newRemoteURL = [NSURL URLWithString: pref];
 
     [self forgetSync];
 
     if (newRemoteURL) {
-
-        NSLog(@"sssss");
         // Tell the database to use this URL for bidirectional sync.
         _pull = [self.database createPullReplication: newRemoteURL];
         _push = [self.database createPushReplication: newRemoteURL];
@@ -99,13 +79,13 @@
                      name: kCBLReplicationChangeNotification object: _push];
         [_push start];
         [_pull start];
-
-
     }
 }
 
 
-// Stops observing the current push/pull replications, if any.
+// ---------------------------------------------------------------------------------------------------------------------
+#pragma mark - Stop observing current push/pull replication, if any.
+// ---------------------------------------------------------------------------------------------------------------------
 - (void) forgetSync {
     NSNotificationCenter* nctr = [NSNotificationCenter defaultCenter];
     if (_pull) {
@@ -119,34 +99,34 @@
 }
 
 
+// ---------------------------------------------------------------------------------------------------------------------
+#pragma mark - Navigation - Preparation before pushing the DetailViewController
+// ---------------------------------------------------------------------------------------------------------------------
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
 
-
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-
-
-    DetailViewController *detailViewController = [segue destinationViewController];
+    DetailViewController *detailViewController = [segue destinationViewController]; // get controller from storyboard
 
     if ([segue.identifier isEqualToString:@"addSegue"]) {
         detailViewController.mode = DetailControllerModeAdd;
         detailViewController.record = nil;
-    } else {
+    }
+    else {
         detailViewController.mode = DetailControllerModeEdt;
+
+        // get the appr. record from selected cell and pass it to the detail view controller
         ListCell *selectedCell = (ListCell *)sender;
         NSIndexPath *indexPath = [self.tableView indexPathForCell:selectedCell];
         CBLQueryRow *row        = self.dataSource.rows[indexPath.row];
         CBLDocument *doc        = row.document;
         detailViewController.record = doc;
     }
-
-
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
 }
 
 
+// ---------------------------------------------------------------------------------------------------------------------
+#pragma mark - CBLUITableDelegate <UITableViewDelegate> protocol methods
+// ---------------------------------------------------------------------------------------------------------------------
 /** Allows delegate to return its own custom cell, just like -tableView:cellForRowAtIndexPath:.
  If this returns nil the table source will create its own cell, as if this method were not implemented. */
 - (UITableViewCell *)couchTableSource:(CBLUITableSource*)source
@@ -159,18 +139,13 @@
 
     static NSString *CellIdentifier = @"ListCell";
     ListCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
-
     cell.itemNameLabel.highlightedTextColor = [UIColor whiteColor];
 
     cell.itemNameLabel.text     = props[@"item"];
     cell.spenderLabel.text      = props[@"user"];
     cell.dateLabel.text         = props[@"date"];
-
-
     cell.valueLabel.text        = [NSString stringWithFormat:@"%.2f", ((NSNumber *)props[@"price"]).floatValue];
-    
     return cell;
-
 }
 
 /** Called after the query's results change, before the table view is reloaded. */
@@ -180,7 +155,7 @@
 {
     NSLog(@"couchTableSource:willUpdateFromQuery");
 }
- */
+*/
 
 /** Called after the query's results change to update the table view. 
  If this method is not implemented by the delegate, reloadData is called on the table view.*/
@@ -228,8 +203,11 @@
 */
 
 
-// Called in response to replication-change notifications. Updates the progress UI.
-- (void) replicationProgress: (NSNotificationCenter*)n {
+// ---------------------------------------------------------------------------------------------------------------------
+#pragma mark - Callbacks to update UI in dependance of sync's progress
+// ---------------------------------------------------------------------------------------------------------------------
+- (void) replicationProgress: (NSNotificationCenter*)n
+{
     if (_pull.status == kCBLReplicationActive || _push.status == kCBLReplicationActive) {
         // Sync is active -- aggregate the progress of both replications and compute a fraction:
         unsigned completed = _pull.completedChangesCount + _push.completedChangesCount;
@@ -253,15 +231,26 @@
     }
 }
 
-/*
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 58;
-}
- */
 
+// ---------------------------------------------------------------------------------------------------------------------
+#pragma mark - UITableViewDelegate protocol methods
+// ---------------------------------------------------------------------------------------------------------------------
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return 58.0f;
+}
+
+
+// ---------------------------------------------------------------------------------------------------------------------
+#pragma mark - Lazy loading of our database (from delegate)
+// ---------------------------------------------------------------------------------------------------------------------
+- (CBLDatabase *)database
+{
+    if (_database == nil) {
+        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        _database = appDelegate.database;
+    }
+    return _database;
 }
 
 

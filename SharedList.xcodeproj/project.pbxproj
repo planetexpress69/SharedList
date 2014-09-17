@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5B08AA3F19C98BF3004DD968 /* DataEntryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B08AA3E19C98BF3004DD968 /* DataEntryCell.m */; };
+		5B46C6ED19C9CE8D00E0789E /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 5BBD730119C9BFC9001870B2 /* README.md */; };
 		5B8E52B219C8511000797C47 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B8E52B119C8511000797C47 /* main.m */; };
 		5B8E52B519C8511000797C47 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B8E52B419C8511000797C47 /* AppDelegate.m */; };
 		5B8E52BB19C8511000797C47 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5B8E52B919C8511000797C47 /* Main.storyboard */; };
@@ -241,6 +242,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5B46C6ED19C9CE8D00E0789E /* README.md in Resources */,
 				5B8E52BB19C8511000797C47 /* Main.storyboard in Resources */,
 				5B8E52C019C8511000797C47 /* LaunchScreen.xib in Resources */,
 				5B8E52BD19C8511000797C47 /* Images.xcassets in Resources */,
