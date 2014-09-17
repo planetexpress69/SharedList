@@ -7,13 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5B08AA3F19C98BF3004DD968 /* DataEntryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B08AA3E19C98BF3004DD968 /* DataEntryCell.m */; };
 		5B8E52B219C8511000797C47 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B8E52B119C8511000797C47 /* main.m */; };
 		5B8E52B519C8511000797C47 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B8E52B419C8511000797C47 /* AppDelegate.m */; };
-		5B8E52B819C8511000797C47 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B8E52B719C8511000797C47 /* ViewController.m */; };
 		5B8E52BB19C8511000797C47 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5B8E52B919C8511000797C47 /* Main.storyboard */; };
 		5B8E52BD19C8511000797C47 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5B8E52BC19C8511000797C47 /* Images.xcassets */; };
 		5B8E52C019C8511000797C47 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B8E52BE19C8511000797C47 /* LaunchScreen.xib */; };
 		5B8E52CC19C8511000797C47 /* SharedListTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B8E52CB19C8511000797C47 /* SharedListTests.m */; };
+		5B8E52D719C852CB00797C47 /* ListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B8E52D619C852CB00797C47 /* ListViewController.m */; };
+		5B8E52DA19C8542700797C47 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B8E52D919C8542700797C47 /* DetailViewController.m */; };
+		5B8E52E119C85B2200797C47 /* CouchbaseLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B8E52E019C85B2200797C47 /* CouchbaseLite.framework */; };
+		5B8E52E319C85B2D00797C47 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B8E52E219C85B2D00797C47 /* libz.dylib */; };
+		5B8E52E519C85B3600797C47 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B8E52E419C85B3600797C47 /* libsqlite3.dylib */; };
+		5B8E52E719C85B3E00797C47 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B8E52E619C85B3E00797C47 /* SystemConfiguration.framework */; };
+		5B8E52EB19C875CC00797C47 /* ListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B8E52EA19C875CC00797C47 /* ListCell.m */; };
+		5BBD730219C9BFC9001870B2 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 5BBD730119C9BFC9001870B2 /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -27,19 +35,30 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5B08AA3D19C98BF3004DD968 /* DataEntryCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataEntryCell.h; sourceTree = "<group>"; };
+		5B08AA3E19C98BF3004DD968 /* DataEntryCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataEntryCell.m; sourceTree = "<group>"; };
 		5B8E52AC19C8511000797C47 /* SharedList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SharedList.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B8E52B019C8511000797C47 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5B8E52B119C8511000797C47 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		5B8E52B319C8511000797C47 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		5B8E52B419C8511000797C47 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		5B8E52B619C8511000797C47 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		5B8E52B719C8511000797C47 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		5B8E52BA19C8511000797C47 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		5B8E52BC19C8511000797C47 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		5B8E52BF19C8511000797C47 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		5B8E52C519C8511000797C47 /* SharedListTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SharedListTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B8E52CA19C8511000797C47 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5B8E52CB19C8511000797C47 /* SharedListTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SharedListTests.m; sourceTree = "<group>"; };
+		5B8E52D519C852CB00797C47 /* ListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListViewController.h; sourceTree = "<group>"; };
+		5B8E52D619C852CB00797C47 /* ListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListViewController.m; sourceTree = "<group>"; };
+		5B8E52D819C8542700797C47 /* DetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
+		5B8E52D919C8542700797C47 /* DetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
+		5B8E52E019C85B2200797C47 /* CouchbaseLite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CouchbaseLite.framework; path = Frameworks/CouchbaseLite.framework; sourceTree = "<group>"; };
+		5B8E52E219C85B2D00797C47 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		5B8E52E419C85B3600797C47 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		5B8E52E619C85B3E00797C47 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		5B8E52E919C875CC00797C47 /* ListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListCell.h; sourceTree = "<group>"; };
+		5B8E52EA19C875CC00797C47 /* ListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListCell.m; sourceTree = "<group>"; };
+		5BBD730119C9BFC9001870B2 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +66,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5B8E52E719C85B3E00797C47 /* SystemConfiguration.framework in Frameworks */,
+				5B8E52E519C85B3600797C47 /* libsqlite3.dylib in Frameworks */,
+				5B8E52E319C85B2D00797C47 /* libz.dylib in Frameworks */,
+				5B8E52E119C85B2200797C47 /* CouchbaseLite.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,9 +86,11 @@
 		5B8E52A319C8511000797C47 = {
 			isa = PBXGroup;
 			children = (
+				5B8E52E819C85F5100797C47 /* Frameworks */,
 				5B8E52AE19C8511000797C47 /* SharedList */,
 				5B8E52C819C8511000797C47 /* SharedListTests */,
 				5B8E52AD19C8511000797C47 /* Products */,
+				5BBD730119C9BFC9001870B2 /* README.md */,
 			);
 			sourceTree = "<group>";
 		};
@@ -83,12 +108,18 @@
 			children = (
 				5B8E52B319C8511000797C47 /* AppDelegate.h */,
 				5B8E52B419C8511000797C47 /* AppDelegate.m */,
-				5B8E52B619C8511000797C47 /* ViewController.h */,
-				5B8E52B719C8511000797C47 /* ViewController.m */,
 				5B8E52B919C8511000797C47 /* Main.storyboard */,
 				5B8E52BC19C8511000797C47 /* Images.xcassets */,
 				5B8E52BE19C8511000797C47 /* LaunchScreen.xib */,
 				5B8E52AF19C8511000797C47 /* Supporting Files */,
+				5B8E52D519C852CB00797C47 /* ListViewController.h */,
+				5B8E52D619C852CB00797C47 /* ListViewController.m */,
+				5B8E52D819C8542700797C47 /* DetailViewController.h */,
+				5B8E52D919C8542700797C47 /* DetailViewController.m */,
+				5B8E52E919C875CC00797C47 /* ListCell.h */,
+				5B8E52EA19C875CC00797C47 /* ListCell.m */,
+				5B08AA3D19C98BF3004DD968 /* DataEntryCell.h */,
+				5B08AA3E19C98BF3004DD968 /* DataEntryCell.m */,
 			);
 			path = SharedList;
 			sourceTree = "<group>";
@@ -117,6 +148,17 @@
 				5B8E52CA19C8511000797C47 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		5B8E52E819C85F5100797C47 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5B8E52E619C85B3E00797C47 /* SystemConfiguration.framework */,
+				5B8E52E419C85B3600797C47 /* libsqlite3.dylib */,
+				5B8E52E219C85B2D00797C47 /* libz.dylib */,
+				5B8E52E019C85B2200797C47 /* CouchbaseLite.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -219,9 +261,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5B8E52B819C8511000797C47 /* ViewController.m in Sources */,
 				5B8E52B519C8511000797C47 /* AppDelegate.m in Sources */,
+				5B8E52EB19C875CC00797C47 /* ListCell.m in Sources */,
 				5B8E52B219C8511000797C47 /* main.m in Sources */,
+				5BBD730219C9BFC9001870B2 /* README.md in Sources */,
+				5B8E52D719C852CB00797C47 /* ListViewController.m in Sources */,
+				5B8E52DA19C8542700797C47 /* DetailViewController.m in Sources */,
+				5B08AA3F19C98BF3004DD968 /* DataEntryCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -343,8 +389,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+				);
 				INFOPLIST_FILE = SharedList/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -353,8 +404,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+				);
 				INFOPLIST_FILE = SharedList/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -412,6 +468,7 @@
 				5B8E52D119C8511000797C47 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		5B8E52D219C8511000797C47 /* Build configuration list for PBXNativeTarget "SharedListTests" */ = {
 			isa = XCConfigurationList;
@@ -420,6 +477,7 @@
 				5B8E52D419C8511000797C47 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

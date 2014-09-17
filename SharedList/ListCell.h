@@ -1,5 +1,5 @@
 //
-//  AppDelegate.h
+//  ListCell.h
 //  SharedList
 //
 //  Created by Martin Kautz on 16.09.14.
@@ -7,12 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-@class CBLDatabase;
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, UIAlertViewDelegate>
+@interface ListCell : UITableViewCell
 // ---------------------------------------------------------------------------------------------------------------------
-@property (strong, nonatomic) UIWindow      *window;
-@property (strong, nonatomic) CBLDatabase   *database;
+@property (nonatomic, weak) IBOutlet UILabel *itemNameLabel;
+@property (nonatomic, weak) IBOutlet UILabel *spenderLabel;
+@property (nonatomic, weak) IBOutlet UILabel *valueLabel;
+@property (nonatomic, weak) IBOutlet UILabel *dateLabel;
 // ---------------------------------------------------------------------------------------------------------------------
 @end
-
