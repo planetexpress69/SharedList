@@ -15,11 +15,10 @@ typedef NS_ENUM(NSInteger, DetailControllerMode) {
 };
 
 @interface DetailViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
-
-@property (nonatomic, weak) IBOutlet UITableView *theTableView;
-@property (nonatomic, assign) DetailControllerMode mode;
-@property (nonatomic, strong) CBLDocument *record;
-@property (nonatomic, strong) CBLDatabase *database;
-
-
+// ---------------------------------------------------------------------------------------------------------------------
+@property (nonatomic, weak)     IBOutlet    UITableView             *theTableView;
+@property (nonatomic, assign)               DetailControllerMode    mode;
+@property (nonatomic, strong)               CBLDocument             *record;
+@property (nonatomic, strong)               CBLDatabase             *database;
+// ---------------------------------------------------------------------------------------------------------------------
 @end

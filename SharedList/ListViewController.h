@@ -21,10 +21,8 @@
 }
 // ---------------------------------------------------------------------------------------------------------------------
 @property (strong, nonatomic)               CBLDatabase             *database;
-@property (strong, nonatomic) IBOutlet      UITableView             *tableView;
-@property (strong, nonatomic) IBOutlet      CBLUITableSource        *dataSource;
-@property (strong, nonatomic) IBOutlet      StatusViewController    *statusViewController;
-// ---------------------------------------------------------------------------------------------------------------------
-
+@property (weak, nonatomic)     IBOutlet    UITableView             *tableView;
+@property (weak, nonatomic)     IBOutlet    CBLUITableSource        *dataSource;
+@property (strong, nonatomic)               StatusViewController    *statusViewController;
 // ---------------------------------------------------------------------------------------------------------------------
 @end

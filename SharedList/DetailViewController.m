@@ -18,30 +18,37 @@
 // ---------------------------------------------------------------------------------------------------------------------
 #pragma mark - Lifecycle
 // ---------------------------------------------------------------------------------------------------------------------
-- (void)viewDidLoad {
-
+- (void)viewDidLoad
+{
     [super viewDidLoad];
 
     // wire the table
     self.theTableView.delegate = self;
     self.theTableView.dataSource = self;
 
+    // register for keyboard appearance/disappearance notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-- (void)didReceiveMemoryWarning {
+- (void)didReceiveMemoryWarning
+{
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
     self.database = nil;
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
 - (void)viewWillAppear:(BOOL)animated
 {
     self.title = self.mode == DetailControllerModeAdd ? @"Add" : @"Edt";
-    self.navigationController.toolbarHidden = YES;
+    self.navigationController.navigationBar.topItem.title = @"Cancel";
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -49,21 +56,20 @@
 {
     [super viewWillDisappear:animated];
 
-
     // TODO: Refactor! This is all pretty experimental & spaghetti!
 
     if (self.record) { // edit existing
 
-
-
         NSMutableDictionary *mutableProps = [self.record.properties mutableCopy];
-
         DataEntryCell *cell0 = (DataEntryCell *)[self.theTableView cellForRowAtIndexPath:
                                                  [NSIndexPath indexPathForRow:0 inSection:0]];
         mutableProps[@"item"] = cell0.dataField.text;
 
         DataEntryCell *cell1 = (DataEntryCell *)[self.theTableView cellForRowAtIndexPath:
                                                  [NSIndexPath indexPathForRow:1 inSection:0]];
+
+        DataEntryCell *cell2 = (DataEntryCell *)[self.theTableView cellForRowAtIndexPath:
+                                                 [NSIndexPath indexPathForRow:2 inSection:0]];
 
         if (cell0.dataField.text.length == 0 || cell1.dataField.text.length == 0) {
             return;
@@ -74,6 +80,8 @@
                                                                                   withString:@"."].floatValue];
 
         mutableProps[@"user"] = [[NSUserDefaults standardUserDefaults]objectForKey:@"user"];
+
+        mutableProps[@"date"] = cell2.dataField.text;
 
         NSError* error;
         if (![self.record putProperties:mutableProps error: &error]) {
@@ -86,6 +94,8 @@
                                                  [NSIndexPath indexPathForRow:0 inSection:0]];
         DataEntryCell *cell1 = (DataEntryCell *)[self.theTableView cellForRowAtIndexPath:
                                                  [NSIndexPath indexPathForRow:1 inSection:0]];
+        DataEntryCell *cell2 = (DataEntryCell *)[self.theTableView cellForRowAtIndexPath:
+                                                 [NSIndexPath indexPathForRow:2 inSection:0]];
 
         UITableViewCell *userCell = [self.theTableView cellForRowAtIndexPath:
                                      [NSIndexPath indexPathForRow:0 inSection:1]];
@@ -94,12 +104,15 @@
             return;
         }
 
+        NSString *sDate = cell2.dataField.text;
+
+
         NSDictionary *props = @{
                                 @"item" : cell0.dataField.text,
                                 @"price" : [NSNumber numberWithFloat:[cell1.dataField.text
                                                                       stringByReplacingOccurrencesOfString:@","
                                                                       withString:@"."].floatValue],
-                                @"date" : @"",
+                                @"date" : sDate,
                                 @"user" : userCell.textLabel.text,
                                 @"check":      @NO,
                                 @"created_at": [CBLJSON JSONObjectWithDate: [NSDate date]]
@@ -158,7 +171,16 @@
             }
                 break;
             case 2: {
-                cell.dataField.text = @"";
+                NSDate *now = [NSDate date];
+                NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+                [formatter setDateFormat:@"dd.MM.yyyy"];
+
+                //Optionally for time zone conversions
+                //[formatter setTimeZone:[NSTimeZone timeZoneWithName:@"..."]];
+
+                NSString *stringFromDate = [formatter stringFromDate:now];
+
+                cell.dataField.text = stringFromDate;
                 cell.dataField.placeholder = @"06.07.2014";
             }
                 break;
@@ -194,7 +216,22 @@
             }
                 break;
             case 2: {
-                cell.dataField.text = [NSString stringWithFormat:@"%@", props[@"date"]];
+
+                NSString *s = nil;
+                if (((NSString *)props[@"date"]).length == 0) {
+                    NSDate *now = [NSDate date];
+                    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+                    [formatter setDateFormat:@"dd.MM.yyyy"];
+
+                    //Optionally for time zone conversions
+                    //[formatter setTimeZone:[NSTimeZone timeZoneWithName:@"..."]];
+
+                    s = [formatter stringFromDate:now];
+                } else {
+                    s = [NSString stringWithFormat:@"%@", props[@"date"]];
+                }
+
+                cell.dataField.text = s;
                 cell.dataField.placeholder = @"06.07.2014";
                 cell.dataField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
                 cell.dataField.delegate = self;

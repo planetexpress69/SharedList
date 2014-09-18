@@ -53,9 +53,16 @@
     [super viewWillAppear:animated];
     NSLog(@"viewWillAppear!");
     //self.navigationController.toolbarHidden = NO;
-    [[UIToolbar appearance]setTintColor:[UIColor whiteColor]];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+    [self.tableView scrollToRowAtIndexPath:indexPath
+                          atScrollPosition:UITableViewScrollPositionTop
+                                  animated:YES];
+}
 
 // ---------------------------------------------------------------------------------------------------------------------
 #pragma mark - Setup sync.
