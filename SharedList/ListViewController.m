@@ -11,6 +11,7 @@
 #import <CouchbaseLite/CouchbaseLite.h>
 #import "ListCell.h"
 #import "AppDelegate.h"
+#import "StatusViewController.h"
 
 @interface ListViewController ()
 @end
@@ -32,6 +33,11 @@
     // Configure sync if necessary:
     [self updateSyncURL];
 
+    self.tableView.backgroundView = nil;
+    self.tableView.backgroundColor = [UIColor whiteColor];
+
+    [self.view addSubview:self.statusViewController.view];
+    self.view.backgroundColor = [UIColor whiteColor];
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -46,7 +52,7 @@
 {
     [super viewWillAppear:animated];
     NSLog(@"viewWillAppear!");
-    self.navigationController.toolbarHidden = NO;
+    //self.navigationController.toolbarHidden = NO;
     [[UIToolbar appearance]setTintColor:[UIColor whiteColor]];
 }
 
@@ -208,16 +214,27 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (void) replicationProgress: (NSNotificationCenter*)n
 {
+
+    NSArray *bbis = self.toolbarItems;
+    UIBarButtonItem *bbi = bbis[2];
+
     if (_pull.status == kCBLReplicationActive || _push.status == kCBLReplicationActive) {
         // Sync is active -- aggregate the progress of both replications and compute a fraction:
         unsigned completed = _pull.completedChangesCount + _push.completedChangesCount;
         unsigned total = _pull.changesCount+ _push.changesCount;
         NSLog(@"SYNC progress: %u / %u", completed, total);
+
+
+
+        [self runSpinAnimationOnView:bbi.customView duration:3.0f rotations:1 repeat:1];
+
+
         ////[self showSyncStatus];
         // Update the progress bar, avoiding divide-by-zero exceptions:
         ////progress.progress = (completed / (float)MAX(total, 1u));
     } else {
         // Sync is idle -- hide the progress bar and show the config button:
+        [self stopSpinAnimationOnView:bbi.customView];
         ////[self showSyncButton];
     }
 
@@ -229,6 +246,8 @@
             NSLog(@"error: %@", error);
         }
     }
+
+    [self updateStatusView];
 }
 
 
@@ -251,6 +270,82 @@
         _database = appDelegate.database;
     }
     return _database;
+}
+
+
+// ---------------------------------------------------------------------------------------------------------------------
+#pragma mark - Rotation animation
+// ---------------------------------------------------------------------------------------------------------------------
+- (void)runSpinAnimationOnView:(UIView*)view
+                      duration:(CGFloat)duration
+                     rotations:(CGFloat)rotations
+                        repeat:(float)repeat;
+{
+    CABasicAnimation* rotationAnimation;
+    rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
+    rotationAnimation.toValue = [NSNumber numberWithFloat: M_PI * 2.0 /* full rotation*/ * rotations * duration ];
+    rotationAnimation.duration = duration;
+    rotationAnimation.cumulative = YES;
+    rotationAnimation.repeatCount = repeat;
+
+    [view.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
+}
+
+- (void)stopSpinAnimationOnView:(UIView *)view
+{
+    [view.layer removeAllAnimations];
+}
+
+
+// ---------------------------------------------------------------------------------------------------------------------
+#pragma mark - Lazy loading of our database (from delegate)
+// ---------------------------------------------------------------------------------------------------------------------
+- (StatusViewController *)statusViewController
+{
+    if (_statusViewController == nil) {
+        UIStoryboard *sb = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        _statusViewController = [sb instantiateViewControllerWithIdentifier:@"StatusViewController"];
+        _statusViewController.view.frame = CGRectMake(0,
+                                                      self.view.frame.size.height - 44,
+                                                      self.view.frame.size.width,
+                                                      132);
+        _statusViewController.view.autoresizingMask = UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleWidth;
+        _statusViewController.view.userInteractionEnabled = YES;
+    }
+    return _statusViewController;
+}
+
+
+- (void)updateStatusView
+{
+    NSArray *rows = self.dataSource.rows;
+    CGFloat sum = 0.0f;
+    CGFloat sumBirte = 0.0f;
+    CGFloat sumJens = 0.0f;
+    for (CBLQueryRow *row in rows) {
+
+
+
+        NSNumber *price = row.document.properties[@"price"];
+        NSLog(@"price: %@", price);
+        sum += price.floatValue;
+
+        if ([row.document.properties[@"user"]isEqualToString:@"Jens"]) {
+            sumJens += price.floatValue;
+        }
+
+        if ([row.document.properties[@"user"]isEqualToString:@"Birte"]) {
+            sumBirte += price.floatValue;
+        }
+    }
+
+    self.statusViewController.sumValueLabel.text = [NSString stringWithFormat:@"%.2f", sum];
+
+    self.statusViewController.us1TitleLabel.text = @"Birte";
+    self.statusViewController.us1ValueLabel.text = [NSString stringWithFormat:@"%.2f", sumBirte];
+
+    self.statusViewController.us2TitleLabel.text = @"Jens";
+    self.statusViewController.us2ValueLabel.text = [NSString stringWithFormat:@"%.2f", sumJens];
 }
 
 

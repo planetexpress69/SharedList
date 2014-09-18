@@ -10,6 +10,7 @@
 #import "ListViewController.h"
 #import <Couchbaselite/CouchbaseLite.h>
 
+#define kDefaultUser            @"Birte"
 #define kDatabaseName           @"spendings"
 #define kDefaultSyncDbURL       @"http://couch.nets.de:5984/spendings"
 
@@ -27,7 +28,10 @@
 
         // Register default URL to sync with
         NSUserDefaults *defaults    = [NSUserDefaults standardUserDefaults];
-        NSDictionary *appdefaults   = [NSDictionary dictionaryWithObject:kDefaultSyncDbURL forKey:@"syncpoint"];
+        NSDictionary *appdefaults   = @{
+                                        @"syncpoint" : kDefaultSyncDbURL,
+                                        @"user" : kDefaultUser
+                                        };
         [defaults registerDefaults:appdefaults];
         [defaults synchronize];
 
@@ -135,16 +139,9 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (void)setupUI
 {
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:1.0f green:0.3f blue:0.0f alpha:1.0f]];
-    [[UINavigationBar appearance] setShadowImage:[UIImage new]];
-    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+    [[UINavigationBar appearance] setTitleTextAttributes: @{ NSForegroundColorAttributeName: [UIColor blackColor],
+                                                             NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Light" size:24.0f] }];
 
-    [[UIToolbar appearance] setBarTintColor:[UIColor orangeColor]];
-    [[UIToolbar appearance] setTintColor:[UIColor whiteColor]];
-
-    [[UINavigationBar appearance] setTitleTextAttributes: @{ NSForegroundColorAttributeName: [UIColor whiteColor],
-     NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Light" size:24.0f] }];
 }
 
 @end

@@ -20,6 +20,7 @@
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:selected animated:animated];
+
     if (selected) {
         self.backgroundColor = [UIColor colorWithRed:1.0 green:0.3 blue:0.0 alpha:.8];
         self.dateLabel.textColor = [UIColor whiteColor];
@@ -40,6 +41,7 @@
 - (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated
 {
     [super setHighlighted:highlighted animated:animated];
+
     if (highlighted) {
         self.backgroundColor = [UIColor colorWithRed:1.0 green:0.3 blue:0.0 alpha:.8];
         self.dateLabel.textColor = [UIColor whiteColor];

@@ -14,7 +14,7 @@ typedef NS_ENUM(NSInteger, DetailControllerMode) {
     DetailControllerModeAdd
 };
 
-@interface DetailViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface DetailViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
 
 @property (nonatomic, weak) IBOutlet UITableView *theTableView;
 @property (nonatomic, assign) DetailControllerMode mode;
