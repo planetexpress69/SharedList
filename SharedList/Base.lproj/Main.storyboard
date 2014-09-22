@@ -222,7 +222,7 @@
                                             <outlet property="itemNameLabel" destination="1Ze-3G-0kx" id="X3B-22-pyR"/>
                                             <outlet property="spenderLabel" destination="KZw-iW-6tV" id="YNm-4q-6Mn"/>
                                             <outlet property="valueLabel" destination="gxk-TF-oAu" id="FGz-EW-cvP"/>
-                                            <segue destination="NVI-2P-miU" kind="show" identifier="edtSegue" id="NYK-of-7gO"/>
+                                            <segue destination="wj4-Cw-yBv" kind="show" identifier="edtSegue" id="Vni-vr-4Wx"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -245,7 +245,7 @@
                         <barButtonItem key="leftBarButtonItem" image="gear.png" id="ZFU-6f-L9d"/>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="Pro-qi-KPK">
                             <connections>
-                                <segue destination="NVI-2P-miU" kind="show" identifier="addSegue" id="cGg-sL-HAn"/>
+                                <segue destination="wj4-Cw-yBv" kind="show" identifier="addSegue" id="pNy-aQ-0XX"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -264,69 +264,106 @@
             <point key="canvasLocation" x="824" y="388"/>
         </scene>
         <!--Detail View Controller-->
-        <scene sceneID="0Em-fk-hNG">
+        <scene sceneID="TXa-NZ-eLR">
             <objects>
-                <viewController storyboardIdentifier="DetailViewController" id="NVI-2P-miU" customClass="DetailViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="x3o-Tx-Duz"/>
-                        <viewControllerLayoutGuide type="bottom" id="oqs-gk-FHd"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="xGe-P7-xLk">
+                <tableViewController id="wj4-Cw-yBv" customClass="DetailViewController" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="GSd-TB-piO">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="X2F-ir-5hB">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
-                                <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="DataEntryCell" rowHeight="58" id="a9g-uU-1Cp" userLabel="ItemCell" customClass="DataEntryCell">
-                                        <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <sections>
+                            <tableViewSection headerTitle="Section-1" id="qeJ-es-NeC">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="Kl3-ki-0zX" customClass="DataEntryCell">
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="a9g-uU-1Cp" id="XYF-6n-xTL">
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Kl3-ki-0zX" id="9FK-ZQ-kbt">
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Blumenkohl" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="eZt-Dl-p83">
-                                                    <rect key="frame" x="8" y="14" width="584" height="29"/>
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="NEf-K1-zgD">
+                                                    <rect key="frame" x="8" y="7" width="584" height="30"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="24"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                 </textField>
                                             </subviews>
-                                            <constraints>
-                                                <constraint firstAttribute="bottomMargin" secondItem="eZt-Dl-p83" secondAttribute="bottom" constant="6" id="6Yk-b8-WjK"/>
-                                                <constraint firstItem="eZt-Dl-p83" firstAttribute="leading" secondItem="XYF-6n-xTL" secondAttribute="leadingMargin" id="OD8-df-BLc"/>
-                                                <constraint firstItem="eZt-Dl-p83" firstAttribute="top" secondItem="XYF-6n-xTL" secondAttribute="topMargin" constant="6" id="gn8-RV-veg"/>
-                                                <constraint firstItem="eZt-Dl-p83" firstAttribute="trailing" secondItem="XYF-6n-xTL" secondAttribute="trailingMargin" id="yRW-Ax-SwV"/>
-                                            </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="dataField" destination="eZt-Dl-p83" id="iN1-cP-rrz"/>
+                                            <outlet property="dataField" destination="NEf-K1-zgD" id="h2n-em-WqT"/>
                                         </connections>
                                     </tableViewCell>
-                                </prototypes>
-                            </tableView>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="X2F-ir-5hB" firstAttribute="leading" secondItem="xGe-P7-xLk" secondAttribute="leadingMargin" constant="-16" id="DkQ-g2-HFv"/>
-                            <constraint firstItem="X2F-ir-5hB" firstAttribute="bottom" secondItem="xGe-P7-xLk" secondAttribute="bottomMargin" id="Lbw-yj-Lti"/>
-                            <constraint firstItem="X2F-ir-5hB" firstAttribute="top" secondItem="xGe-P7-xLk" secondAttribute="topMargin" id="pVh-GN-euu"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="X2F-ir-5hB" secondAttribute="trailing" constant="-16" id="pZ2-tV-ifO"/>
-                        </constraints>
-                    </view>
-                    <navigationItem key="navigationItem" id="chh-0p-x6l"/>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="ji9-IO-aCy" customClass="DataEntryCell">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ji9-IO-aCy" id="iRD-2e-QOT">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="86O-7u-kTh">
+                                                    <rect key="frame" x="8" y="7" width="584" height="30"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="24"/>
+                                                    <textInputTraits key="textInputTraits"/>
+                                                </textField>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="dataField" destination="86O-7u-kTh" id="S3Z-rh-hZJ"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="o0e-8J-uZi" customClass="DataEntryCell">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="o0e-8J-uZi" id="cLb-XJ-n0F">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="iAY-1D-7Ju">
+                                                    <rect key="frame" x="8" y="7" width="584" height="30"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="24"/>
+                                                    <textInputTraits key="textInputTraits"/>
+                                                </textField>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="dataField" destination="iAY-1D-7Ju" id="MTp-ZW-zKM"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                            <tableViewSection headerTitle="Section-2" id="xPl-oF-l0P">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="sZC-Hp-LIA" style="IBUITableViewCellStyleDefault" id="4CN-jI-EyQ">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="4CN-jI-EyQ" id="4sD-BF-Rjc">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="sZC-Hp-LIA">
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="24"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="wj4-Cw-yBv" id="OVB-Rf-PM7"/>
+                            <outlet property="delegate" destination="wj4-Cw-yBv" id="8wl-Iz-7i8"/>
+                        </connections>
+                    </tableView>
                     <connections>
-                        <outlet property="theTableView" destination="X2F-ir-5hB" id="NLC-mG-egF"/>
+                        <outlet property="itemDateCell" destination="o0e-8J-uZi" id="Icw-MA-zaW"/>
+                        <outlet property="itemPriceCell" destination="ji9-IO-aCy" id="7Ga-1Q-gh3"/>
+                        <outlet property="itemTitleCell" destination="Kl3-ki-0zX" id="SnJ-Ol-vqf"/>
+                        <outlet property="itemUserCell" destination="4CN-jI-EyQ" id="pKH-QJ-OCQ"/>
                     </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="l8n-Lu-MBh" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Exx-55-4ks" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1542" y="389"/>
+            <point key="canvasLocation" x="1541" y="384"/>
         </scene>
     </scenes>
     <resources>
         <image name="gear.png" width="40" height="40"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="NYK-of-7gO"/>
+        <segue reference="Vni-vr-4Wx"/>
     </inferredMetricsTieBreakers>
 </document>

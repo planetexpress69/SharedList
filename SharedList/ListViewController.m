@@ -38,6 +38,12 @@
 
     [self.view addSubview:self.statusViewController.view];
     self.view.backgroundColor = [UIColor whiteColor];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(gotRecord)
+                                                 name:@"DidAddRecordNotification"
+                                               object:nil];
+
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -58,11 +64,13 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-    [self.tableView scrollToRowAtIndexPath:indexPath
-                          atScrollPosition:UITableViewScrollPositionTop
-                                  animated:YES];
 }
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
+}
+
 
 // ---------------------------------------------------------------------------------------------------------------------
 #pragma mark - Setup sync.
@@ -355,5 +363,12 @@
     self.statusViewController.us2ValueLabel.text = [NSString stringWithFormat:@"%.2f", sumJens];
 }
 
+- (void)gotRecord
+{
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+    [self.tableView scrollToRowAtIndexPath:indexPath
+                          atScrollPosition:UITableViewScrollPositionTop
+                                  animated:YES];
+}
 
 @end

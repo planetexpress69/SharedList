@@ -11,7 +11,7 @@
 #import "AppDelegate.h"
 
 @interface DetailViewController ()
-
+@property (nonatomic, assign, getter = isDirty) BOOL dirty;
 @end
 
 @implementation DetailViewController
@@ -22,13 +22,12 @@
 {
     [super viewDidLoad];
 
-    // wire the table
-    self.theTableView.delegate = self;
-    self.theTableView.dataSource = self;
-
     // register for keyboard appearance/disappearance notifications
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:)
+                                                 name:UIKeyboardWillShowNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:)
+                                                 name:UIKeyboardWillHideNotification object:nil];
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -49,6 +48,7 @@
 {
     self.title = self.mode == DetailControllerModeAdd ? @"Add" : @"Edt";
     self.navigationController.navigationBar.topItem.title = @"Cancel";
+    self.dirty = NO;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -60,28 +60,27 @@
 
     if (self.record) { // edit existing
 
+        
+        if (!self.isDirty)
+        {
+            NSLog(@"Seems to be unchanged... Bailing out!");
+            return;
+        }
+
         NSMutableDictionary *mutableProps = [self.record.properties mutableCopy];
-        DataEntryCell *cell0 = (DataEntryCell *)[self.theTableView cellForRowAtIndexPath:
-                                                 [NSIndexPath indexPathForRow:0 inSection:0]];
-        mutableProps[@"item"] = cell0.dataField.text;
+        mutableProps[@"item"] = self.itemTitleCell.dataField.text;
 
-        DataEntryCell *cell1 = (DataEntryCell *)[self.theTableView cellForRowAtIndexPath:
-                                                 [NSIndexPath indexPathForRow:1 inSection:0]];
-
-        DataEntryCell *cell2 = (DataEntryCell *)[self.theTableView cellForRowAtIndexPath:
-                                                 [NSIndexPath indexPathForRow:2 inSection:0]];
-
-        if (cell0.dataField.text.length == 0 || cell1.dataField.text.length == 0) {
+        if (self.itemTitleCell.dataField.text.length == 0 || self.itemPriceCell.dataField.text.length == 0) {
             return;
         }
 
         mutableProps[@"price"] = [NSNumber numberWithFloat:
-                                  [cell1.dataField.text stringByReplacingOccurrencesOfString:@","
-                                                                                  withString:@"."].floatValue];
+                                  [self.itemPriceCell.dataField.text stringByReplacingOccurrencesOfString:@","
+                                                                                               withString:@"."].floatValue];
 
         mutableProps[@"user"] = [[NSUserDefaults standardUserDefaults]objectForKey:@"user"];
 
-        mutableProps[@"date"] = cell2.dataField.text;
+        mutableProps[@"date"] = self.itemDateCell.dataField.text;
 
         NSError* error;
         if (![self.record putProperties:mutableProps error: &error]) {
@@ -90,30 +89,21 @@
     }
     else {    // add new
 
-        DataEntryCell *cell0 = (DataEntryCell *)[self.theTableView cellForRowAtIndexPath:
-                                                 [NSIndexPath indexPathForRow:0 inSection:0]];
-        DataEntryCell *cell1 = (DataEntryCell *)[self.theTableView cellForRowAtIndexPath:
-                                                 [NSIndexPath indexPathForRow:1 inSection:0]];
-        DataEntryCell *cell2 = (DataEntryCell *)[self.theTableView cellForRowAtIndexPath:
-                                                 [NSIndexPath indexPathForRow:2 inSection:0]];
 
-        UITableViewCell *userCell = [self.theTableView cellForRowAtIndexPath:
-                                     [NSIndexPath indexPathForRow:0 inSection:1]];
-
-        if (cell0.dataField.text.length == 0 || cell1.dataField.text.length == 0) {
+        if (self.itemTitleCell.dataField.text.length == 0 || self.itemPriceCell.dataField.text.length == 0) {
             return;
         }
 
-        NSString *sDate = cell2.dataField.text;
+        NSString *sDate = self.itemDateCell.dataField.text;
 
 
         NSDictionary *props = @{
-                                @"item" : cell0.dataField.text,
-                                @"price" : [NSNumber numberWithFloat:[cell1.dataField.text
+                                @"item" : self.itemTitleCell.dataField.text,
+                                @"price" : [NSNumber numberWithFloat:[self.itemPriceCell.dataField.text
                                                                       stringByReplacingOccurrencesOfString:@","
                                                                       withString:@"."].floatValue],
                                 @"date" : sDate,
-                                @"user" : userCell.textLabel.text,
+                                @"user" : self.itemUserCell.textLabel.text,
                                 @"check":      @NO,
                                 @"created_at": [CBLJSON JSONObjectWithDate: [NSDate date]]
                                 };
@@ -123,6 +113,8 @@
         NSError* error;
         if (![doc putProperties:props error:&error]) {
             NSLog(@"Error! %@", error.localizedDescription);
+        } else {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"DidAddRecordNotification" object:nil];
         }
     }
 }
@@ -149,114 +141,85 @@
 
     if (indexPath.section == 0) {
 
-    static NSString *CellIdentifier = @"DataEntryCell";
-    DataEntryCell *cell = (DataEntryCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-        cell = [[DataEntryCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    }
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        if (self.mode == DetailControllerModeAdd) {
 
-    if (self.mode == DetailControllerModeAdd) {
-
-        switch (indexPath.row) {
-            case 0: {
-                cell.dataField.text = @"";
-                cell.dataField.placeholder = @"Blumenkohl";
-            }
-                break;
-            case 1: {
-                cell.dataField.text = @"";
-                cell.dataField.placeholder = @"1.95";
-            }
-                break;
-            case 2: {
-                NSDate *now = [NSDate date];
-                NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-                [formatter setDateFormat:@"dd.MM.yyyy"];
-
-                //Optionally for time zone conversions
-                //[formatter setTimeZone:[NSTimeZone timeZoneWithName:@"..."]];
-
-                NSString *stringFromDate = [formatter stringFromDate:now];
-
-                cell.dataField.text = stringFromDate;
-                cell.dataField.placeholder = @"06.07.2014";
-            }
-                break;
-
-
-            default:
-                cell.dataField.text = @"";
-                break;
-        }
-
-
-    }
-    else if (self.mode == DetailControllerModeEdt) {
-
-
-        NSDictionary *props = self.record.properties;
-
-        switch (indexPath.row) {
-            case 0: {
-                cell.dataField.text = props[@"item"];
-                cell.dataField.placeholder = @"Blumenkohl";
-                cell.dataField.keyboardType = UIKeyboardTypeDefault;
-                cell.dataField.delegate = self;
-            }
-                break;
-            case 1: {
-                cell.dataField.text = [NSString stringWithFormat:@"%.2f", ((NSNumber *)props[@"price"]).floatValue];
-                cell.dataField.placeholder = @"1.95";
-                cell.dataField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
-                cell.dataField.delegate = self;
-
-
-            }
-                break;
-            case 2: {
-
-                NSString *s = nil;
-                if (((NSString *)props[@"date"]).length == 0) {
-                    NSDate *now = [NSDate date];
-                    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-                    [formatter setDateFormat:@"dd.MM.yyyy"];
-
-                    //Optionally for time zone conversions
-                    //[formatter setTimeZone:[NSTimeZone timeZoneWithName:@"..."]];
-
-                    s = [formatter stringFromDate:now];
-                } else {
-                    s = [NSString stringWithFormat:@"%@", props[@"date"]];
+            switch (indexPath.row) {
+                case 0: {
+                    self.itemTitleCell.dataField.text           = @"";
+                    self.itemTitleCell.dataField.placeholder    = @"Blumenkohl";
+                    return self.itemTitleCell;
                 }
-
-                cell.dataField.text = s;
-                cell.dataField.placeholder = @"06.07.2014";
-                cell.dataField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
-                cell.dataField.delegate = self;
+                    break;
+                case 1: {
+                    self.itemPriceCell.dataField.text           = @"";
+                    self.itemPriceCell.dataField.placeholder    = @"1.95";
+                    return self.itemPriceCell;
+                }
+                    break;
+                default: {
+                    NSDate *now = [NSDate date];
+                    NSDateFormatter *formatter                  = [[NSDateFormatter alloc] init];
+                    [formatter setDateFormat:@"dd.MM.yyyy"];
+                    //[formatter setTimeZone:[NSTimeZone timeZoneWithName:@"..."]];
+                    NSString *stringFromDate                    = [formatter stringFromDate:now];
+                    self.itemDateCell.dataField.text            = stringFromDate;
+                    self.itemDateCell.dataField.placeholder     = @"06.07.2014";
+                    return self.itemDateCell;
+                }
+                    break;
             }
-                break;
-
-            default:
-                cell.dataField.text = @"";
-                break;
         }
-    }
-    return cell;
+
+        else  /* if (self.mode == DetailControllerModeEdt) */ {
+
+            NSDictionary *props = self.record.properties;
+
+            switch (indexPath.row) {
+
+                case 0: {
+                    self.itemTitleCell.dataField.text           = props[@"item"];
+                    self.itemTitleCell.dataField.placeholder    = @"Blumenkohl";
+                    self.itemTitleCell.dataField.keyboardType   = UIKeyboardTypeDefault;
+                    self.itemTitleCell.dataField.delegate       = self;
+                    return self.itemTitleCell;
+                }
+                    break;
+
+                case 1: {
+                    self.itemPriceCell.dataField.text           = [NSString stringWithFormat:@"%.2f", ((NSNumber *)props[@"price"]).floatValue];
+                    self.itemPriceCell.dataField.placeholder    = @"1.95";
+                    self.itemPriceCell.dataField.keyboardType   = UIKeyboardTypeNumbersAndPunctuation;
+                    self.itemPriceCell.dataField.delegate       = self;
+                    return self.itemPriceCell;
+                }
+                    break;
+
+                default: {
+                    NSString *s = nil;
+                    if (((NSString *)props[@"date"]).length == 0) {
+                        NSDate *now                             = [NSDate date];
+                        NSDateFormatter *formatter              = [[NSDateFormatter alloc] init];
+                        [formatter setDateFormat:@"dd.MM.yyyy"];
+                        //[formatter setTimeZone:[NSTimeZone timeZoneWithName:@"..."]];
+                        s                                       = [formatter stringFromDate:now];
+                    } else {
+                        s                                       = [NSString stringWithFormat:@"%@", props[@"date"]];
+                    }
+                    self.itemDateCell.dataField.text            = s;
+                    self.itemDateCell.dataField.placeholder     = @"06.07.2014";
+                    self.itemDateCell.dataField.keyboardType    = UIKeyboardTypeNumbersAndPunctuation;
+                    self.itemDateCell.dataField.delegate        = self;
+                    return self.itemDateCell;
+                }
+                    break;
+
+            }
+        }
+
     }
     else {
-        static NSString *CellIdentifier = @"UITableViewCell";
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-        if (cell == nil) {
-            cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-            cell.selectionStyle = UITableViewCellSelectionStyleDefault;
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        }
-
-        cell.textLabel.text = [self defaultUser];
-        return cell;
-
+        self.itemUserCell.textLabel.text = [self defaultUser];
+        return self.itemUserCell;
     }
 }
 
@@ -266,27 +229,26 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 58.0f;
+    return 44.0f;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == 1) {
-        UITableViewCell *cell = [self.theTableView cellForRowAtIndexPath:indexPath];
-        NSString *sCurrentUser = cell.textLabel.text;
 
+    self.dirty = YES;
+
+    if (indexPath.section == 1) {
+        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+        NSString *sCurrentUser = cell.textLabel.text;
         if ([sCurrentUser isEqualToString:@"Birte"]) {
             [[NSUserDefaults standardUserDefaults]setObject:@"Jens" forKey:@"user"];
-
         }
         else {
             [[NSUserDefaults standardUserDefaults]setObject:@"Birte" forKey:@"user"];
         }
 
         [[NSUserDefaults standardUserDefaults]synchronize];
-
-        [self.theTableView reloadData];
-
+        [self.tableView reloadData];
     }
 }
 
@@ -310,15 +272,17 @@
 
 - (void)keyboardWillShow:(NSNotification *)notification;
 {
+    self.dirty = YES;
+
     NSDictionary *userInfo = [notification userInfo];
     NSValue *keyboardBoundsValue = [userInfo objectForKey:UIKeyboardFrameEndUserInfoKey];
     CGFloat keyboardHeight = [keyboardBoundsValue CGRectValue].size.height;
 
     CGFloat duration = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
     NSInteger animationCurve = [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] integerValue];
-    UIEdgeInsets insets = [self.theTableView contentInset];
+    UIEdgeInsets insets = [self.tableView  contentInset];
     [UIView animateWithDuration:duration delay:0. options:animationCurve animations:^{
-        [self.theTableView setContentInset:UIEdgeInsetsMake(insets.top, insets.left, keyboardHeight, insets.right)];
+        [self.tableView setContentInset:UIEdgeInsetsMake(insets.top, insets.left, keyboardHeight, insets.right)];
         [[self view] layoutIfNeeded];
     } completion:nil];
 }
@@ -328,11 +292,15 @@
     NSDictionary *userInfo = [notification userInfo];
     CGFloat duration = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
     NSInteger animationCurve = [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] integerValue];
-    UIEdgeInsets insets = [self.theTableView contentInset];
+    UIEdgeInsets insets = [self.tableView  contentInset];
     [UIView animateWithDuration:duration delay:0. options:animationCurve animations:^{
-        [self.theTableView setContentInset:UIEdgeInsetsMake(insets.top, insets.left, 0., insets.right)];
+        [self.tableView setContentInset:UIEdgeInsetsMake(insets.top, insets.left, 0., insets.right)];
         [[self view] layoutIfNeeded];
     } completion:nil];
 }
 
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    self.dirty = YES;
+}
 @end
