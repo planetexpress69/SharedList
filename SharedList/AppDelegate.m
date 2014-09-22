@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "ListViewController.h"
 #import <Couchbaselite/CouchbaseLite.h>
+#import <HockeySDK/HockeySDK.h>
 
 #define kDefaultUser            @"Birte"
 #define kDatabaseName           @"spendings"
@@ -67,6 +68,10 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"59571e6955f452a88d286978ebf4ce1f"];
+    [[BITHockeyManager sharedHockeyManager] startManager];
+    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
+
     [self setupUI];
     return YES;
 }

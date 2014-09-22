@@ -12,6 +12,7 @@
 
 @interface DetailViewController ()
 @property (nonatomic, assign, getter = isDirty) BOOL dirty;
+@property (nonatomic, strong) UIBarButtonItem *saveButton;
 @end
 
 @implementation DetailViewController
@@ -23,6 +24,17 @@
     [super viewDidLoad];
 
     // register for keyboard appearance/disappearance notifications
+
+    self.saveButton = [[UIBarButtonItem alloc]initWithTitle:@"Save"
+                                                                 style:UIBarButtonItemStylePlain target:self
+                                                                action:@selector(save:)];
+    self.navigationItem.rightBarButtonItem = self.saveButton;
+    self.navigationItem.rightBarButtonItem.enabled = NO;
+
+    self.itemTitleCell.dataField.delegate = self;
+    self.itemPriceCell.dataField.delegate = self;
+    self.itemDateCell.dataField.delegate = self;
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:)
                                                  name:UIKeyboardWillShowNotification object:nil];
     
@@ -57,55 +69,53 @@
     [super viewWillDisappear:animated];
 
     // TODO: Refactor! This is all pretty experimental & spaghetti!
+    //[self save];
 
-    if (self.record) { // edit existing
+}
 
-        
-        if (!self.isDirty)
-        {
-            NSLog(@"Seems to be unchanged... Bailing out!");
+- (void)save
+{
+    if (self.record) { // --- edit existing ----------------------------------------------------------------------------
+
+        if (!self.isDirty) {
+            // record seems to be unchanged, so: bailing out!
+            return;
+        }
+
+        if (self.itemTitleCell.dataField.text.length == 0 || self.itemPriceCell.dataField.text.length == 0) {
+            // no title or no price
             return;
         }
 
         NSMutableDictionary *mutableProps = [self.record.properties mutableCopy];
-        mutableProps[@"item"] = self.itemTitleCell.dataField.text;
-
-        if (self.itemTitleCell.dataField.text.length == 0 || self.itemPriceCell.dataField.text.length == 0) {
-            return;
-        }
-
-        mutableProps[@"price"] = [NSNumber numberWithFloat:
-                                  [self.itemPriceCell.dataField.text stringByReplacingOccurrencesOfString:@","
-                                                                                               withString:@"."].floatValue];
-
-        mutableProps[@"user"] = [[NSUserDefaults standardUserDefaults]objectForKey:@"user"];
-
-        mutableProps[@"date"] = self.itemDateCell.dataField.text;
+        mutableProps[@"item"]   = self.itemTitleCell.dataField.text;
+        mutableProps[@"price"]  = [NSNumber numberWithFloat:
+                                  [self.itemPriceCell.dataField.text
+                                   stringByReplacingOccurrencesOfString:@"," withString:@"."].floatValue];
+        mutableProps[@"user"]   = [[NSUserDefaults standardUserDefaults]objectForKey:@"user"];
+        mutableProps[@"date"]   = self.itemDateCell.dataField.text;
 
         NSError* error;
-        if (![self.record putProperties:mutableProps error: &error]) {
+        if (![self.record putProperties:mutableProps error:&error]) {
             NSLog(@"Error! %@", error.localizedDescription);
         }
     }
-    else {    // add new
-
+    else { // --- add new ----------------------------------------------------------------------------------------------
 
         if (self.itemTitleCell.dataField.text.length == 0 || self.itemPriceCell.dataField.text.length == 0) {
+            // no title or no price
             return;
         }
 
-        NSString *sDate = self.itemDateCell.dataField.text;
-
-
         NSDictionary *props = @{
-                                @"item" : self.itemTitleCell.dataField.text,
-                                @"price" : [NSNumber numberWithFloat:[self.itemPriceCell.dataField.text
+                                @"item"         : self.itemTitleCell.dataField.text,
+                                @"price"        : [NSNumber numberWithFloat:[self.itemPriceCell.dataField.text
                                                                       stringByReplacingOccurrencesOfString:@","
                                                                       withString:@"."].floatValue],
-                                @"date" : sDate,
-                                @"user" : self.itemUserCell.textLabel.text,
-                                @"check":      @NO,
-                                @"created_at": [CBLJSON JSONObjectWithDate: [NSDate date]]
+                                @"date"         : self.itemDateCell.dataField.text,
+                                @"user"         : self.itemUserCell.textLabel.text,
+                                @"check"        : @NO,
+                                @"created_at"   : [CBLJSON JSONObjectWithDate: [NSDate date]]
                                 };
 
         CBLDocument *doc = [self.database createDocument];
@@ -302,5 +312,17 @@
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
     self.dirty = YES;
+    self.navigationItem.rightBarButtonItem.enabled = YES;
+    self.navigationItem.rightBarButtonItem.style = UIBarButtonItemStyleDone;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+}
+
+- (IBAction)save:(id)sender
+{
+    [self save];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 @end

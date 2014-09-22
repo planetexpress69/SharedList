@@ -59,6 +59,8 @@
     [super viewWillAppear:animated];
     NSLog(@"viewWillAppear!");
     //self.navigationController.toolbarHidden = NO;
+    self.navigationController.navigationBar.topItem.title = @"Hungerliste";
+
 }
 
 - (void)viewDidAppear:(BOOL)animated
