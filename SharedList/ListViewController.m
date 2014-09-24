@@ -15,6 +15,8 @@
 #import "PreferenceViewController.h"
 
 @interface ListViewController ()
+@property (nonatomic, assign) BOOL showingSyncButton;
+@property (nonatomic, strong) UIActivityIndicatorView *spinner;
 @end
 
 @implementation ListViewController
@@ -39,15 +41,6 @@
 
     [self.view addSubview:self.statusViewController.view];
 
-    [[NSNotificationCenter defaultCenter]addObserver:self
-                                            selector:@selector(gotNewRecord)
-                                                name:@"DidAddRecordNotification"
-                                              object:nil];
-
-    [[NSNotificationCenter defaultCenter]addObserver:self
-                                            selector:@selector(gotChangedRecord)
-                                                name:@"DidChangeRecordNotification"
-                                              object:nil];
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -236,21 +229,19 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (void)replicationProgress:(NSNotificationCenter*)n
 {
-
-
     if (_pull.status == kCBLReplicationActive || _push.status == kCBLReplicationActive) {
         // Sync is active -- aggregate the progress of both replications and compute a fraction:
         unsigned completed = _pull.completedChangesCount + _push.completedChangesCount;
         unsigned total = _pull.changesCount+ _push.changesCount;
         NSLog(@"SYNC progress: %u / %u", completed, total);
         [self runSpinAnimationOnView:self.prefsButton.customView duration:3.0f rotations:1 repeat:1];
-        ////[self showSyncStatus];
+        [self showSyncStatus];
         // Update the progress bar, avoiding divide-by-zero exceptions:
         ////progress.progress = (completed / (float)MAX(total, 1u));
     } else {
         // Sync is idle -- hide the progress bar and show the config button:
         [self stopSpinAnimationOnView:self.prefsButton.customView];
-        ////[self showSyncButton];
+        [self showSyncButton];
     }
 
     // Check for any change in error status and display new errors:
@@ -335,7 +326,6 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (void)updateStatusView
 {
-    NSLog(@"Update status view...");
     NSArray *rows       = self.dataSource.rows;
     CGFloat sum         = 0.0f;
     CGFloat sumBirte    = 0.0f;
@@ -363,21 +353,6 @@
 
 
 // ---------------------------------------------------------------------------------------------------------------------
-#pragma mark - Callbacks for database changes notifications
-// ---------------------------------------------------------------------------------------------------------------------
-- (void)gotNewRecord
-{
-    //[self performSelector:@selector(updateStatusView) withObject:nil afterDelay:3.0];
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-- (void)gotChangedRecord
-{
-    //[self performSelector:@selector(updateStatusView) withObject:nil afterDelay:3.0];
-}
-
-
-// ---------------------------------------------------------------------------------------------------------------------
 #pragma mark - Lazy loading of PreferenceViewController
 // ---------------------------------------------------------------------------------------------------------------------
 - (PreferenceViewController *)prefsViewController
@@ -389,4 +364,37 @@
     return _prefsViewController;
 }
 
+
+- (void)showSyncButton {
+    if (!self.showingSyncButton) {
+        self.showingSyncButton = YES;
+        UIBarButtonItem* syncButton =
+        [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"gear"]
+                           landscapeImagePhone:[UIImage imageNamed:@"gear"]
+                                         style:UIBarButtonItemStylePlain
+                                        target:self
+                                        action:@selector(triggerOpenPrefs:)];
+
+        self.navigationItem.leftBarButtonItem = syncButton;
+    }
+}
+
+
+// When replication is active, show a progress bar.
+- (void)showSyncStatus {
+    if (self.showingSyncButton) {
+        self.showingSyncButton = NO;
+        if (!self.spinner) {
+            self.spinner = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        }
+        UIBarButtonItem* progressItem = [[UIBarButtonItem alloc] initWithCustomView:self.spinner];
+        progressItem.enabled = NO;
+        self.navigationItem.leftBarButtonItem = progressItem;
+    }
+}
+
+- (IBAction)triggerOpenPrefs:(id)sender
+{
+    [self.navigationController pushViewController:self.prefsViewController animated:YES];
+}
 @end

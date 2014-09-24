@@ -11,8 +11,10 @@
 #import "AppDelegate.h"
 
 @interface DetailViewController ()
-@property (nonatomic, assign, getter = isDirty) BOOL dirty;
-@property (nonatomic, strong) UIBarButtonItem *saveButton;
+// ---------------------------------------------------------------------------------------------------------------------
+@property (nonatomic, assign, getter = isDirty) BOOL                dirty;
+@property (nonatomic, strong)                   UIBarButtonItem     *saveButton;
+// ---------------------------------------------------------------------------------------------------------------------
 @end
 
 @implementation DetailViewController
@@ -37,12 +39,6 @@
     self.itemTitleCell.selectionStyle               = UITableViewCellSelectionStyleNone;
     self.itemPriceCell.selectionStyle               = UITableViewCellSelectionStyleNone;
     self.itemDateCell.selectionStyle                = UITableViewCellSelectionStyleNone;
-
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:)
-                                                 name:UIKeyboardWillShowNotification object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:)
-                                                 name:UIKeyboardWillHideNotification object:nil];
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -72,6 +68,7 @@
     [super viewWillDisappear:animated];
 }
 
+
 // ---------------------------------------------------------------------------------------------------------------------
 #pragma mark - Persistence to Couch DB
 // ---------------------------------------------------------------------------------------------------------------------
@@ -100,8 +97,6 @@
         NSError* error;
         if (![self.record putProperties:mutableProps error:&error]) {
             NSLog(@"Error! %@", error.localizedDescription);
-        } else {
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"DidChangeRecordNotification" object:nil];
         }
     }
     else { // --- add new ----------------------------------------------------------------------------------------------
@@ -127,8 +122,6 @@
         NSError* error;
         if (![doc putProperties:props error:&error]) {
             NSLog(@"Error! %@", error.localizedDescription);
-        } else {
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"DidAddRecordNotification" object:nil];
         }
     }
 }
@@ -253,6 +246,7 @@
     if (indexPath.section == 1) {
         UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
         NSString *sCurrentUser = cell.textLabel.text;
+
         if ([sCurrentUser isEqualToString:@"Birte"]) {
             [[NSUserDefaults standardUserDefaults]setObject:@"Jens" forKey:@"user"];
         }
@@ -289,55 +283,13 @@
 
 
 // ---------------------------------------------------------------------------------------------------------------------
-#pragma mark - Keyboard show/hide callbacks
-// ---------------------------------------------------------------------------------------------------------------------
-- (void)keyboardWillShow:(NSNotification *)notification;
-{
-    self.dirty = YES;
-
-    NSDictionary *userInfo = [notification userInfo];
-    NSValue *keyboardBoundsValue = [userInfo objectForKey:UIKeyboardFrameEndUserInfoKey];
-    CGFloat keyboardHeight = [keyboardBoundsValue CGRectValue].size.height;
-    CGFloat duration = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
-    NSInteger animationCurve = [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] integerValue];
-    UIEdgeInsets insets = [self.tableView  contentInset];
-
-    NSLog(@"show: keyboard height: %.2f", keyboardHeight);
-    NSLog(@"show insets: %@", NSStringFromUIEdgeInsets(insets));
-    NSLog(@"show table frame :%@", NSStringFromCGRect(self.tableView.frame));
-
-    [UIView animateWithDuration:duration delay:0. options:animationCurve animations:^{
-        //[self.tableView setContentInset:UIEdgeInsetsMake(insets.top, insets.left, keyboardHeight, insets.right)];
-        [[self view] layoutIfNeeded];
-    } completion:nil];
-}
-
-// ---------------------------------------------------------------------------------------------------------------------
-- (void)keyboardWillHide:(NSNotification *)notification;
-{
-    NSDictionary *userInfo = [notification userInfo];
-    CGFloat duration = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
-    NSInteger animationCurve = [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] integerValue];
-    UIEdgeInsets insets = [self.tableView  contentInset];
-
-    NSLog(@"hide insets: %@", NSStringFromUIEdgeInsets(insets));
-    NSLog(@"hide table frame :%@", NSStringFromCGRect(self.tableView.frame));
-
-    [UIView animateWithDuration:duration delay:0. options:animationCurve animations:^{
-        //[self.tableView setContentInset:UIEdgeInsetsMake(insets.top, insets.left, 0., insets.right)];
-        [[self view] layoutIfNeeded];
-    } completion:nil];
-}
-
-
-// ---------------------------------------------------------------------------------------------------------------------
 #pragma mark - UITextFieldDelegate protocol methods
 // ---------------------------------------------------------------------------------------------------------------------
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    self.dirty = YES;
-    self.navigationItem.rightBarButtonItem.enabled = YES;
-    self.navigationItem.rightBarButtonItem.style = UIBarButtonItemStyleDone;
+    self.dirty                                      = YES;
+    self.navigationItem.rightBarButtonItem.enabled  = YES;
+    self.navigationItem.rightBarButtonItem.style    = UIBarButtonItemStyleDone;
 }
 
 

@@ -12,38 +12,37 @@
 
 
 @interface PreferenceViewController ()
-
+// ---------------------------------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------------------------------
 @end
 
 @implementation PreferenceViewController
 
+// ---------------------------------------------------------------------------------------------------------------------
+#pragma mark - Lifecycle
+// ---------------------------------------------------------------------------------------------------------------------
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.title = @"Einstellungen";
 }
 
+// ---------------------------------------------------------------------------------------------------------------------
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     self.theEndpointTextField.text = [[NSUserDefaults standardUserDefaults]objectForKey:@"syncpoint"];
 }
 
+// ---------------------------------------------------------------------------------------------------------------------
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
-
+// ---------------------------------------------------------------------------------------------------------------------
+#pragma mark - Trigger closing controller
+// ---------------------------------------------------------------------------------------------------------------------
 - (IBAction)close:(id)sender
 {
     [self dismissViewControllerAnimated:YES completion:^{
@@ -51,10 +50,14 @@
     }];
 }
 
+// ---------------------------------------------------------------------------------------------------------------------
+#pragma mark - Trigger closing controller
+// ---------------------------------------------------------------------------------------------------------------------
 - (IBAction)triggerDelete:(id)sender
 {
     UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:@"Delete"
-                                                       message:@"This will delete the entire list from all devices. Are you sure?"
+                                                       message:@"This will delete the entire list "
+                                                               @"from all devices. Are you sure?"
                                                       delegate:self
                                              cancelButtonTitle:@"Cancel"
                                              otherButtonTitles:@"OK", nil];
@@ -85,7 +88,6 @@
                     }
                     else {
                         NSLog(@"All done!");
-                        [[NSNotificationCenter defaultCenter] postNotificationName:@"DidChangeRecordNotification" object:nil];
                     }
                 }
             }

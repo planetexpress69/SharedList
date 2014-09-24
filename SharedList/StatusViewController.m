@@ -130,7 +130,6 @@
 
         }
         completion:^(BOOL finished){
-            NSLog(@"Beep! %d", (int)rot);
             [UIView beginAnimations:@"rotate" context:nil];
             [UIView setAnimationDuration:0.3];
             self.tinyTriangle.transform = CGAffineTransformMakeRotation(DegreesToRadians(rot));

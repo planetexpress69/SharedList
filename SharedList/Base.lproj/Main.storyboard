@@ -241,11 +241,6 @@
                     </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="ListViewController" id="hZb-1V-Crv">
-                        <barButtonItem key="leftBarButtonItem" image="gear.png" id="KmZ-KB-Ets">
-                            <connections>
-                                <segue destination="ODd-KM-Tt5" kind="show" id="OZd-6j-cKl"/>
-                            </connections>
-                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="Pro-qi-KPK">
                             <connections>
                                 <segue destination="wj4-Cw-yBv" kind="show" identifier="addSegue" id="pNy-aQ-0XX"/>
@@ -428,9 +423,6 @@
             <point key="canvasLocation" x="1541" y="384"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="gear.png" width="40" height="40"/>
-    </resources>
     <inferredMetricsTieBreakers>
         <segue reference="Vni-vr-4Wx"/>
     </inferredMetricsTieBreakers>
