@@ -387,6 +387,7 @@
         if (!self.spinner) {
             self.spinner = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         }
+        [self.spinner startAnimating];
         UIBarButtonItem* progressItem = [[UIBarButtonItem alloc] initWithCustomView:self.spinner];
         progressItem.enabled = NO;
         self.navigationItem.leftBarButtonItem = progressItem;
