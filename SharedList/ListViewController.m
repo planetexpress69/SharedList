@@ -365,6 +365,9 @@
 }
 
 
+// ---------------------------------------------------------------------------------------------------------------------
+#pragma mark - Visual candy
+// ---------------------------------------------------------------------------------------------------------------------
 - (void)showSyncButton {
     if (!self.showingSyncButton) {
         self.showingSyncButton = YES;
@@ -374,13 +377,12 @@
                                          style:UIBarButtonItemStylePlain
                                         target:self
                                         action:@selector(triggerOpenPrefs:)];
-
         self.navigationItem.leftBarButtonItem = syncButton;
     }
 }
 
 
-// When replication is active, show a progress bar.
+// ---------------------------------------------------------------------------------------------------------------------
 - (void)showSyncStatus {
     if (self.showingSyncButton) {
         self.showingSyncButton = NO;
@@ -394,6 +396,9 @@
     }
 }
 
+// ---------------------------------------------------------------------------------------------------------------------
+#pragma mark - Open preferences
+// ---------------------------------------------------------------------------------------------------------------------
 - (IBAction)triggerOpenPrefs:(id)sender
 {
     [self.navigationController pushViewController:self.prefsViewController animated:YES];
