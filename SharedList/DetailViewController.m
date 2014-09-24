@@ -301,10 +301,13 @@
     CGFloat duration = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
     NSInteger animationCurve = [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] integerValue];
     UIEdgeInsets insets = [self.tableView  contentInset];
+
+    NSLog(@"show: keyboard height: %.2f", keyboardHeight);
     NSLog(@"show insets: %@", NSStringFromUIEdgeInsets(insets));
     NSLog(@"show table frame :%@", NSStringFromCGRect(self.tableView.frame));
+
     [UIView animateWithDuration:duration delay:0. options:animationCurve animations:^{
-        [self.tableView setContentInset:UIEdgeInsetsMake(insets.top, insets.left, keyboardHeight, insets.right)];
+        //[self.tableView setContentInset:UIEdgeInsetsMake(insets.top, insets.left, keyboardHeight, insets.right)];
         [[self view] layoutIfNeeded];
     } completion:nil];
 }
@@ -316,11 +319,12 @@
     CGFloat duration = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
     NSInteger animationCurve = [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] integerValue];
     UIEdgeInsets insets = [self.tableView  contentInset];
+
     NSLog(@"hide insets: %@", NSStringFromUIEdgeInsets(insets));
-    NSLog(@"show table frame :%@", NSStringFromCGRect(self.tableView.frame));
+    NSLog(@"hide table frame :%@", NSStringFromCGRect(self.tableView.frame));
 
     [UIView animateWithDuration:duration delay:0. options:animationCurve animations:^{
-        [self.tableView setContentInset:UIEdgeInsetsMake(insets.top, insets.left, 0., insets.right)];
+        //[self.tableView setContentInset:UIEdgeInsetsMake(insets.top, insets.left, 0., insets.right)];
         [[self view] layoutIfNeeded];
     } completion:nil];
 }
