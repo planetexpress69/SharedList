@@ -23,17 +23,20 @@
 {
     [super viewDidLoad];
 
-    // register for keyboard appearance/disappearance notifications
-
     self.saveButton = [[UIBarButtonItem alloc]initWithTitle:@"Save"
-                                                                 style:UIBarButtonItemStylePlain target:self
-                                                                action:@selector(save:)];
-    self.navigationItem.rightBarButtonItem = self.saveButton;
-    self.navigationItem.rightBarButtonItem.enabled = NO;
+                                                      style:UIBarButtonItemStylePlain
+                                                     target:self
+                                                     action:@selector(save:)];
+    
+    self.navigationItem.rightBarButtonItem          = self.saveButton;
+    self.navigationItem.rightBarButtonItem.enabled  = NO;
 
-    self.itemTitleCell.dataField.delegate = self;
-    self.itemPriceCell.dataField.delegate = self;
-    self.itemDateCell.dataField.delegate = self;
+    self.itemTitleCell.dataField.delegate           = self;
+    self.itemPriceCell.dataField.delegate           = self;
+    self.itemDateCell.dataField.delegate            = self;
+    self.itemTitleCell.selectionStyle               = UITableViewCellSelectionStyleNone;
+    self.itemPriceCell.selectionStyle               = UITableViewCellSelectionStyleNone;
+    self.itemDateCell.selectionStyle                = UITableViewCellSelectionStyleNone;
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:)
                                                  name:UIKeyboardWillShowNotification object:nil];
@@ -46,10 +49,10 @@
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
     self.database = nil;
 }
 
+// ---------------------------------------------------------------------------------------------------------------------
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -58,8 +61,8 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     self.title = self.mode == DetailControllerModeAdd ? @"Add" : @"Edt";
-    self.navigationController.navigationBar.topItem.title = @"Cancel";
     self.dirty = NO;
 }
 
@@ -67,12 +70,11 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-
-    // TODO: Refactor! This is all pretty experimental & spaghetti!
-    //[self save];
-
 }
 
+// ---------------------------------------------------------------------------------------------------------------------
+#pragma mark - Persistence to Couch DB
+// ---------------------------------------------------------------------------------------------------------------------
 - (void)save
 {
     if (self.record) { // --- edit existing ----------------------------------------------------------------------------
@@ -83,7 +85,7 @@
         }
 
         if (self.itemTitleCell.dataField.text.length == 0 || self.itemPriceCell.dataField.text.length == 0) {
-            // no title or no price
+            // no title or no price, so: bailing out!
             return;
         }
 
@@ -98,6 +100,8 @@
         NSError* error;
         if (![self.record putProperties:mutableProps error:&error]) {
             NSLog(@"Error! %@", error.localizedDescription);
+        } else {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"DidChangeRecordNotification" object:nil];
         }
     }
     else { // --- add new ----------------------------------------------------------------------------------------------
@@ -222,10 +226,8 @@
                     return self.itemDateCell;
                 }
                     break;
-
             }
         }
-
     }
     else {
         self.itemUserCell.textLabel.text = [self defaultUser];
@@ -242,6 +244,7 @@
     return 44.0f;
 }
 
+// ---------------------------------------------------------------------------------------------------------------------
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 
@@ -275,11 +278,19 @@
     return _database;
 }
 
+
+// ---------------------------------------------------------------------------------------------------------------------
+#pragma mark - Get the default user from preferences
+// ---------------------------------------------------------------------------------------------------------------------
 - (NSString *)defaultUser
 {
     return [[NSUserDefaults standardUserDefaults] objectForKey:@"user"];
 }
 
+
+// ---------------------------------------------------------------------------------------------------------------------
+#pragma mark - Keyboard show/hide callbacks
+// ---------------------------------------------------------------------------------------------------------------------
 - (void)keyboardWillShow:(NSNotification *)notification;
 {
     self.dirty = YES;
@@ -287,28 +298,37 @@
     NSDictionary *userInfo = [notification userInfo];
     NSValue *keyboardBoundsValue = [userInfo objectForKey:UIKeyboardFrameEndUserInfoKey];
     CGFloat keyboardHeight = [keyboardBoundsValue CGRectValue].size.height;
-
     CGFloat duration = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
     NSInteger animationCurve = [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] integerValue];
     UIEdgeInsets insets = [self.tableView  contentInset];
+    NSLog(@"show insets: %@", NSStringFromUIEdgeInsets(insets));
+    NSLog(@"show table frame :%@", NSStringFromCGRect(self.tableView.frame));
     [UIView animateWithDuration:duration delay:0. options:animationCurve animations:^{
         [self.tableView setContentInset:UIEdgeInsetsMake(insets.top, insets.left, keyboardHeight, insets.right)];
         [[self view] layoutIfNeeded];
     } completion:nil];
 }
 
+// ---------------------------------------------------------------------------------------------------------------------
 - (void)keyboardWillHide:(NSNotification *)notification;
 {
     NSDictionary *userInfo = [notification userInfo];
     CGFloat duration = [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
     NSInteger animationCurve = [[userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey] integerValue];
     UIEdgeInsets insets = [self.tableView  contentInset];
+    NSLog(@"hide insets: %@", NSStringFromUIEdgeInsets(insets));
+    NSLog(@"show table frame :%@", NSStringFromCGRect(self.tableView.frame));
+
     [UIView animateWithDuration:duration delay:0. options:animationCurve animations:^{
         [self.tableView setContentInset:UIEdgeInsetsMake(insets.top, insets.left, 0., insets.right)];
         [[self view] layoutIfNeeded];
     } completion:nil];
 }
 
+
+// ---------------------------------------------------------------------------------------------------------------------
+#pragma mark - UITextFieldDelegate protocol methods
+// ---------------------------------------------------------------------------------------------------------------------
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
     self.dirty = YES;
@@ -316,10 +336,10 @@
     self.navigationItem.rightBarButtonItem.style = UIBarButtonItemStyleDone;
 }
 
-- (void)textFieldDidEndEditing:(UITextField *)textField
-{
-}
 
+// ---------------------------------------------------------------------------------------------------------------------
+#pragma mark - User triggered action
+// ---------------------------------------------------------------------------------------------------------------------
 - (IBAction)save:(id)sender
 {
     [self save];

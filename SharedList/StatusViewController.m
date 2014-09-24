@@ -11,6 +11,8 @@
 @interface StatusViewController ()
 @end
 
+#define DegreesToRadians(x) ((x) * M_PI / 180.0)
+
 @implementation StatusViewController
 // ---------------------------------------------------------------------------------------------------------------------
 #pragma mark - Lifecycle
@@ -25,6 +27,9 @@
     [self.view setUserInteractionEnabled:YES];
     [self.view addGestureRecognizer:panGesture];
     self.view.backgroundColor = [UIColor colorWithWhite:.8 alpha:1.0];
+
+    self.tinyTriangle.image = [UIImage imageNamed:@"chevron"];
+    self.tinyTriangle.backgroundColor = [UIColor clearColor];
 }
 
 - (void)didReceiveMemoryWarning
@@ -71,9 +76,10 @@
 - (void)snapToDefault
 {
     CGFloat thisHeight          = self.view.frame.size.height;
+    
     CGFloat superViewsHeight    = self.view.superview.frame.size.height;
-    CGFloat yMin                = superViewsHeight - (thisHeight / 2);
-    CGFloat yMax                = yMin + thisHeight / 3 * 2;
+    CGFloat yMin                = superViewsHeight - ((thisHeight) / 2);
+    CGFloat yMax                = yMin + (thisHeight -12) / 3 * 2;
     CGPoint currentCenter       = self.view.center;
     CGFloat currentY            = currentCenter.y;
 
@@ -88,19 +94,23 @@
     CGRect posUs2TitleLabel     = self.us2TitleLabel.frame;
     CGRect posUs2ValueLabel     = self.us2ValueLabel.frame;
 
+    CGFloat rot = 90.0f;
+
     if (yMax - currentY < thisHeight / 3) {
         // snap to collapsed view (down)
         neueMitte = CGPointMake(self.view.frame.size.width / 2, yMax);
-        posSumTitleLabel.origin.y = posSumValueLabel.origin.y = 13;
-        posUs1TitleLabel.origin.y = posUs1ValueLabel.origin.y = 55;
-        posUs2TitleLabel.origin.y = posUs2ValueLabel.origin.y = 98;
+        posSumTitleLabel.origin.y = posSumValueLabel.origin.y = 25;
+        posUs1TitleLabel.origin.y = posUs1ValueLabel.origin.y = 67;
+        posUs2TitleLabel.origin.y = posUs2ValueLabel.origin.y = 110;
+        rot = 0;
     }
     else {
         // snap to expanded view (up)
         neueMitte = CGPointMake(self.view.frame.size.width / 2, yMin);
-        posSumTitleLabel.origin.y = posSumValueLabel.origin.y = 98;
-        posUs1TitleLabel.origin.y = posUs1ValueLabel.origin.y = 13;
-        posUs2TitleLabel.origin.y = posUs2ValueLabel.origin.y = 55;
+        posSumTitleLabel.origin.y = posSumValueLabel.origin.y = 110;
+        posUs1TitleLabel.origin.y = posUs1ValueLabel.origin.y = 25;
+        posUs2TitleLabel.origin.y = posUs2ValueLabel.origin.y = 67;
+        rot = 180;
     }
 
     [UIView animateWithDuration:.1 animations:^{
@@ -108,6 +118,7 @@
     }
     completion:^(BOOL finished){
         [UIView animateWithDuration:0.1 animations:^{
+
             self.sumTitleLabel.frame = posSumTitleLabel;
             self.sumValueLabel.frame = posSumValueLabel;
 
@@ -116,10 +127,40 @@
 
             self.us2TitleLabel.frame = posUs2TitleLabel;
             self.us2ValueLabel.frame = posUs2ValueLabel;
+
         }
         completion:^(BOOL finished){
+            NSLog(@"Beep! %d", (int)rot);
+            [UIView beginAnimations:@"rotate" context:nil];
+            [UIView setAnimationDuration:0.3];
+            self.tinyTriangle.transform = CGAffineTransformMakeRotation(DegreesToRadians(rot));
+            [UIView commitAnimations];
         }];
     }];
+}
+
+
+// ---------------------------------------------------------------------------------------------------------------------
+#pragma mark - Rotation animation
+// ---------------------------------------------------------------------------------------------------------------------
+- (void)runSpinAnimationOnView:(UIView *)view
+                      duration:(CGFloat)duration
+                     rotations:(CGFloat)rotations
+                        repeat:(float)repeat;
+{
+    CABasicAnimation* rotationAnimation;
+    rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
+    rotationAnimation.toValue = [NSNumber numberWithFloat: M_PI * 2.0 /* full rotation*/ * rotations * duration ];
+    rotationAnimation.duration = duration;
+    rotationAnimation.cumulative = YES;
+    rotationAnimation.repeatCount = repeat;
+
+    [view.layer addAnimation:rotationAnimation forKey:@"rotationAnimation"];
+}
+
+- (void)stopSpinAnimationOnView:(UIView *)view
+{
+    [view.layer removeAllAnimations];
 }
 
 

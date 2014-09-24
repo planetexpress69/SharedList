@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <CouchbaseLite/CouchbaseLite.h>
 
-@class CBLDatabase, CBLReplication, StatusViewController;
+@class CBLDatabase, CBLReplication, StatusViewController, PreferenceViewController;
 
 @interface ListViewController : UIViewController <CBLUITableDelegate>
 {
@@ -20,9 +20,11 @@
 
 }
 // ---------------------------------------------------------------------------------------------------------------------
-@property (strong, nonatomic)               CBLDatabase             *database;
-@property (weak, nonatomic)     IBOutlet    UITableView             *tableView;
-@property (weak, nonatomic)     IBOutlet    CBLUITableSource        *dataSource;
-@property (strong, nonatomic)               StatusViewController    *statusViewController;
+@property (strong, nonatomic)               CBLDatabase                 *database;
+@property (weak, nonatomic)     IBOutlet    UITableView                 *tableView;
+@property (weak, nonatomic)     IBOutlet    CBLUITableSource            *dataSource;
+@property (strong, nonatomic)               StatusViewController        *statusViewController;
+@property (strong, nonatomic)               PreferenceViewController    *prefsViewController;
+@property (weak, nonatomic)     IBOutlet    UIBarButtonItem             *prefsButton;
 // ---------------------------------------------------------------------------------------------------------------------
 @end

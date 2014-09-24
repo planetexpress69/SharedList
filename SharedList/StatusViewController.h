@@ -16,6 +16,7 @@
 @property (nonatomic, weak) IBOutlet UILabel *us1ValueLabel;
 @property (nonatomic, weak) IBOutlet UILabel *us2TitleLabel;
 @property (nonatomic, weak) IBOutlet UILabel *us2ValueLabel;
+@property (nonatomic, weak) IBOutlet UIImageView *tinyTriangle;
 // ---------------------------------------------------------------------------------------------------------------------
 - (IBAction)handlePanGesture:(UIPanGestureRecognizer*)sender;
 // ---------------------------------------------------------------------------------------------------------------------

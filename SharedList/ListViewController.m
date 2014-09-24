@@ -12,6 +12,7 @@
 #import "ListCell.h"
 #import "AppDelegate.h"
 #import "StatusViewController.h"
+#import "PreferenceViewController.h"
 
 @interface ListViewController ()
 @end
@@ -30,20 +31,23 @@
     query.descending        = YES;
     self.dataSource.query   = query;
 
-    // Configure sync if necessary:
     [self updateSyncURL];
 
-    self.tableView.backgroundView = nil;
-    self.tableView.backgroundColor = [UIColor whiteColor];
+    self.tableView.backgroundView   = nil;
+    self.tableView.backgroundColor  = [UIColor whiteColor];
+    self.view.backgroundColor       = [UIColor whiteColor];
 
     [self.view addSubview:self.statusViewController.view];
-    self.view.backgroundColor = [UIColor whiteColor];
 
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(gotRecord)
-                                                 name:@"DidAddRecordNotification"
-                                               object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self
+                                            selector:@selector(gotNewRecord)
+                                                name:@"DidAddRecordNotification"
+                                              object:nil];
 
+    [[NSNotificationCenter defaultCenter]addObserver:self
+                                            selector:@selector(gotChangedRecord)
+                                                name:@"DidChangeRecordNotification"
+                                              object:nil];
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -57,17 +61,18 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    NSLog(@"viewWillAppear!");
-    //self.navigationController.toolbarHidden = NO;
-    self.navigationController.navigationBar.topItem.title = @"Hungerliste";
-
+    self.title = @"Hungerliste";
+    [self.tableView deselectRowAtIndexPath:self.tableView.indexPathForSelectedRow animated:YES];
 }
 
+// ---------------------------------------------------------------------------------------------------------------------
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    self.title = @"Hungerliste";
 }
 
+// ---------------------------------------------------------------------------------------------------------------------
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter]removeObserver:self];
@@ -82,7 +87,7 @@
     if (!self.database)
         return;
 
-    NSURL* newRemoteURL     = nil;
+    NSURL *newRemoteURL     = nil;
     NSString *pref          = [[NSUserDefaults standardUserDefaults] objectForKey:@"syncpoint"];
     if (pref.length > 0)
         newRemoteURL = [NSURL URLWithString: pref];
@@ -91,9 +96,10 @@
 
     if (newRemoteURL) {
         // Tell the database to use this URL for bidirectional sync.
-        _pull = [self.database createPullReplication: newRemoteURL];
-        _push = [self.database createPushReplication: newRemoteURL];
+        _pull = [self.database createPullReplication:newRemoteURL];
+        _push = [self.database createPushReplication:newRemoteURL];
         _pull.continuous = _push.continuous = YES;
+
         // Observe replication progress changes, in both directions:
         NSNotificationCenter* nctr = [NSNotificationCenter defaultCenter];
         [nctr addObserver: self selector: @selector(replicationProgress:)
@@ -109,14 +115,14 @@
 // ---------------------------------------------------------------------------------------------------------------------
 #pragma mark - Stop observing current push/pull replication, if any.
 // ---------------------------------------------------------------------------------------------------------------------
-- (void) forgetSync {
-    NSNotificationCenter* nctr = [NSNotificationCenter defaultCenter];
+- (void)forgetSync {
+    NSNotificationCenter *nctr = [NSNotificationCenter defaultCenter];
     if (_pull) {
-        [nctr removeObserver: self name: nil object: _pull];
+        [nctr removeObserver:self name:nil object:_pull];
         _pull = nil;
     }
     if (_push) {
-        [nctr removeObserver: self name: nil object: _push];
+        [nctr removeObserver:self name:nil object:_push];
         _push = nil;
     }
 }
@@ -127,21 +133,20 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-
-    DetailViewController *detailViewController = [segue destinationViewController]; // get controller from storyboard
-
     if ([segue.identifier isEqualToString:@"addSegue"]) {
+        DetailViewController *detailViewController = [segue destinationViewController];
         detailViewController.mode = DetailControllerModeAdd;
         detailViewController.record = nil;
     }
-    else {
+    else if ([segue.identifier isEqualToString:@"edtSegue"]) {
+        DetailViewController *detailViewController = [segue destinationViewController];
         detailViewController.mode = DetailControllerModeEdt;
 
         // get the appr. record from selected cell and pass it to the detail view controller
-        ListCell *selectedCell = (ListCell *)sender;
-        NSIndexPath *indexPath = [self.tableView indexPathForCell:selectedCell];
-        CBLQueryRow *row        = self.dataSource.rows[indexPath.row];
-        CBLDocument *doc        = row.document;
+        ListCell *selectedCell      = (ListCell *)sender;
+        NSIndexPath *indexPath      = [self.tableView indexPathForCell:selectedCell];
+        CBLQueryRow *row            = self.dataSource.rows[indexPath.row];
+        CBLDocument *doc            = row.document;
         detailViewController.record = doc;
     }
 }
@@ -150,8 +155,6 @@
 // ---------------------------------------------------------------------------------------------------------------------
 #pragma mark - CBLUITableDelegate <UITableViewDelegate> protocol methods
 // ---------------------------------------------------------------------------------------------------------------------
-/** Allows delegate to return its own custom cell, just like -tableView:cellForRowAtIndexPath:.
- If this returns nil the table source will create its own cell, as if this method were not implemented. */
 - (UITableViewCell *)couchTableSource:(CBLUITableSource*)source
                 cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -172,13 +175,14 @@
 }
 
 /** Called after the query's results change, before the table view is reloaded. */
-/*
+
 - (void)couchTableSource:(CBLUITableSource*)source
      willUpdateFromQuery:(CBLLiveQuery*)query
 {
     NSLog(@"couchTableSource:willUpdateFromQuery");
+    [self updateStatusView];
 }
-*/
+
 
 /** Called after the query's results change to update the table view. 
  If this method is not implemented by the delegate, reloadData is called on the table view.*/
@@ -212,46 +216,40 @@
                deleteRow:(CBLQueryRow*)row
 {
     NSLog(@"couchTableSource:deleteRow:");
+    [self updateStatusView];
     return YES;
 }
 */
 
 /** Called upon failure of a document deletion triggered by the user deleting a row. */
-/*
+
 - (void)couchTableSource:(CBLUITableSource*)source
             deleteFailed:(NSError*)error
 {
     NSLog(@"couchTableSource:deleteFailed:");
 }
-*/
+
 
 
 // ---------------------------------------------------------------------------------------------------------------------
 #pragma mark - Callbacks to update UI in dependance of sync's progress
 // ---------------------------------------------------------------------------------------------------------------------
-- (void) replicationProgress: (NSNotificationCenter*)n
+- (void)replicationProgress:(NSNotificationCenter*)n
 {
 
-    NSArray *bbis = self.toolbarItems;
-    UIBarButtonItem *bbi = bbis[2];
 
     if (_pull.status == kCBLReplicationActive || _push.status == kCBLReplicationActive) {
         // Sync is active -- aggregate the progress of both replications and compute a fraction:
         unsigned completed = _pull.completedChangesCount + _push.completedChangesCount;
         unsigned total = _pull.changesCount+ _push.changesCount;
         NSLog(@"SYNC progress: %u / %u", completed, total);
-
-
-
-        [self runSpinAnimationOnView:bbi.customView duration:3.0f rotations:1 repeat:1];
-
-
+        [self runSpinAnimationOnView:self.prefsButton.customView duration:3.0f rotations:1 repeat:1];
         ////[self showSyncStatus];
         // Update the progress bar, avoiding divide-by-zero exceptions:
         ////progress.progress = (completed / (float)MAX(total, 1u));
     } else {
         // Sync is idle -- hide the progress bar and show the config button:
-        [self stopSpinAnimationOnView:bbi.customView];
+        [self stopSpinAnimationOnView:self.prefsButton.customView];
         ////[self showSyncButton];
     }
 
@@ -263,8 +261,7 @@
             NSLog(@"error: %@", error);
         }
     }
-
-    [self updateStatusView];
+    //[self updateStatusView];
 }
 
 
@@ -293,7 +290,7 @@
 // ---------------------------------------------------------------------------------------------------------------------
 #pragma mark - Rotation animation
 // ---------------------------------------------------------------------------------------------------------------------
-- (void)runSpinAnimationOnView:(UIView*)view
+- (void)runSpinAnimationOnView:(UIView *)view
                       duration:(CGFloat)duration
                      rotations:(CGFloat)rotations
                         repeat:(float)repeat;
@@ -315,7 +312,7 @@
 
 
 // ---------------------------------------------------------------------------------------------------------------------
-#pragma mark - Lazy loading of our database (from delegate)
+#pragma mark - Lazy loading of our StatusViewController
 // ---------------------------------------------------------------------------------------------------------------------
 - (StatusViewController *)statusViewController
 {
@@ -323,9 +320,9 @@
         UIStoryboard *sb = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
         _statusViewController = [sb instantiateViewControllerWithIdentifier:@"StatusViewController"];
         _statusViewController.view.frame = CGRectMake(0,
-                                                      self.view.frame.size.height - 44,
+                                                      self.view.frame.size.height - 56,
                                                       self.view.frame.size.width,
-                                                      132);
+                                                      144);
         _statusViewController.view.autoresizingMask = UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleWidth;
         _statusViewController.view.userInteractionEnabled = YES;
     }
@@ -333,18 +330,19 @@
 }
 
 
+// ---------------------------------------------------------------------------------------------------------------------
+#pragma mark - Updates the status
+// ---------------------------------------------------------------------------------------------------------------------
 - (void)updateStatusView
 {
-    NSArray *rows = self.dataSource.rows;
-    CGFloat sum = 0.0f;
-    CGFloat sumBirte = 0.0f;
-    CGFloat sumJens = 0.0f;
+    NSLog(@"Update status view...");
+    NSArray *rows       = self.dataSource.rows;
+    CGFloat sum         = 0.0f;
+    CGFloat sumBirte    = 0.0f;
+    CGFloat sumJens     = 0.0f;
+
     for (CBLQueryRow *row in rows) {
-
-
-
         NSNumber *price = row.document.properties[@"price"];
-        NSLog(@"price: %@", price);
         sum += price.floatValue;
 
         if ([row.document.properties[@"user"]isEqualToString:@"Jens"]) {
@@ -357,20 +355,38 @@
     }
 
     self.statusViewController.sumValueLabel.text = [NSString stringWithFormat:@"%.2f", sum];
-
     self.statusViewController.us1TitleLabel.text = @"Birte";
     self.statusViewController.us1ValueLabel.text = [NSString stringWithFormat:@"%.2f", sumBirte];
-
     self.statusViewController.us2TitleLabel.text = @"Jens";
     self.statusViewController.us2ValueLabel.text = [NSString stringWithFormat:@"%.2f", sumJens];
 }
 
-- (void)gotRecord
+
+// ---------------------------------------------------------------------------------------------------------------------
+#pragma mark - Callbacks for database changes notifications
+// ---------------------------------------------------------------------------------------------------------------------
+- (void)gotNewRecord
 {
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-    [self.tableView scrollToRowAtIndexPath:indexPath
-                          atScrollPosition:UITableViewScrollPositionTop
-                                  animated:YES];
+    //[self performSelector:@selector(updateStatusView) withObject:nil afterDelay:3.0];
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (void)gotChangedRecord
+{
+    //[self performSelector:@selector(updateStatusView) withObject:nil afterDelay:3.0];
+}
+
+
+// ---------------------------------------------------------------------------------------------------------------------
+#pragma mark - Lazy loading of PreferenceViewController
+// ---------------------------------------------------------------------------------------------------------------------
+- (PreferenceViewController *)prefsViewController
+{
+    if (_prefsViewController == nil) {
+        UIStoryboard *sb = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        _prefsViewController = [sb instantiateViewControllerWithIdentifier:@"PreferenceViewController"];
+    }
+    return _prefsViewController;
 }
 
 @end

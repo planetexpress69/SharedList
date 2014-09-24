@@ -7,7 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5B003DFF19D2EC7700142BE0 /* chevron.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B003DFC19D2EC7700142BE0 /* chevron.png */; };
+		5B003E0019D2EC7700142BE0 /* chevron@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B003DFD19D2EC7700142BE0 /* chevron@2x.png */; };
+		5B003E0119D2EC7700142BE0 /* chevron@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B003DFE19D2EC7700142BE0 /* chevron@3x.png */; };
 		5B08AA3F19C98BF3004DD968 /* DataEntryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B08AA3E19C98BF3004DD968 /* DataEntryCell.m */; };
+		5B41798119D17E2700DCCD56 /* PreferenceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B41798019D17E2700DCCD56 /* PreferenceViewController.m */; };
 		5B4205B819D0C0850001B3A4 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B4205B719D0C0850001B3A4 /* CoreText.framework */; };
 		5B4205BE19D0C0A50001B3A4 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B4205BA19D0C0A50001B3A4 /* HockeySDK.framework */; };
 		5B4205BF19D0C0A50001B3A4 /* HockeySDK.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 5B4205BC19D0C0A50001B3A4 /* HockeySDK.xcconfig */; };
@@ -48,8 +52,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5B003DFC19D2EC7700142BE0 /* chevron.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chevron.png; sourceTree = "<group>"; };
+		5B003DFD19D2EC7700142BE0 /* chevron@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chevron@2x.png"; sourceTree = "<group>"; };
+		5B003DFE19D2EC7700142BE0 /* chevron@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "chevron@3x.png"; sourceTree = "<group>"; };
+		5B01A02B19D19F72008DE537 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		5B08AA3D19C98BF3004DD968 /* DataEntryCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataEntryCell.h; sourceTree = "<group>"; };
 		5B08AA3E19C98BF3004DD968 /* DataEntryCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataEntryCell.m; sourceTree = "<group>"; };
+		5B41797F19D17E2700DCCD56 /* PreferenceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreferenceViewController.h; sourceTree = "<group>"; };
+		5B41798019D17E2700DCCD56 /* PreferenceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreferenceViewController.m; sourceTree = "<group>"; };
 		5B4205B519D0C0790001B3A4 /* CarrierBundleUtilities.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = CarrierBundleUtilities.dylib; path = usr/lib/CarrierBundleUtilities.dylib; sourceTree = SDKROOT; };
 		5B4205B719D0C0850001B3A4 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		5B4205BA19D0C0A50001B3A4 /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HockeySDK.framework; sourceTree = "<group>"; };
@@ -155,6 +165,9 @@
 		5B8E52AE19C8511000797C47 /* SharedList */ = {
 			isa = PBXGroup;
 			children = (
+				5B003DFC19D2EC7700142BE0 /* chevron.png */,
+				5B003DFD19D2EC7700142BE0 /* chevron@2x.png */,
+				5B003DFE19D2EC7700142BE0 /* chevron@3x.png */,
 				5BC9C1C019C9DCED0071BDA4 /* gear_landscape.png */,
 				5BC9C1C119C9DCED0071BDA4 /* gear_landscape@2x.png */,
 				5BC9C1C219C9DCED0071BDA4 /* gear.png */,
@@ -173,6 +186,8 @@
 				5B8E52D619C852CB00797C47 /* ListViewController.m */,
 				5B8E52D819C8542700797C47 /* DetailViewController.h */,
 				5B8E52D919C8542700797C47 /* DetailViewController.m */,
+				5B41797F19D17E2700DCCD56 /* PreferenceViewController.h */,
+				5B41798019D17E2700DCCD56 /* PreferenceViewController.m */,
 				5B8E52E919C875CC00797C47 /* ListCell.h */,
 				5B8E52EA19C875CC00797C47 /* ListCell.m */,
 				5B08AA3D19C98BF3004DD968 /* DataEntryCell.h */,
@@ -212,6 +227,7 @@
 		5B8E52E819C85F5100797C47 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5B01A02B19D19F72008DE537 /* HealthKit.framework */,
 				5B4205B919D0C0A50001B3A4 /* HockeySDK.embeddedframework */,
 				5B4205B719D0C0850001B3A4 /* CoreText.framework */,
 				5B4205B519D0C0790001B3A4 /* CarrierBundleUtilities.dylib */,
@@ -273,6 +289,7 @@
 				TargetAttributes = {
 					5B8E52AB19C8511000797C47 = {
 						CreatedOnToolsVersion = 6.0;
+						DevelopmentTeam = UQ24M9LT38;
 					};
 					5B8E52C419C8511000797C47 = {
 						CreatedOnToolsVersion = 6.0;
@@ -304,15 +321,18 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5B003E0019D2EC7700142BE0 /* chevron@2x.png in Resources */,
 				5BC9C1CE19C9DCED0071BDA4 /* spinner.png in Resources */,
 				5B46C6ED19C9CE8D00E0789E /* README.md in Resources */,
 				5BC9C1CA19C9DCED0071BDA4 /* gear.png in Resources */,
+				5B003E0119D2EC7700142BE0 /* chevron@3x.png in Resources */,
 				5BC9C1C919C9DCED0071BDA4 /* gear_landscape@2x.png in Resources */,
 				5B8E52BB19C8511000797C47 /* Main.storyboard in Resources */,
 				5B8E52C019C8511000797C47 /* LaunchScreen.xib in Resources */,
 				5BC9C1CF19C9DCED0071BDA4 /* spinner@2x.png in Resources */,
 				5B8E52BD19C8511000797C47 /* Images.xcassets in Resources */,
 				5BC9C1C819C9DCED0071BDA4 /* gear_landscape.png in Resources */,
+				5B003DFF19D2EC7700142BE0 /* chevron.png in Resources */,
 				5B4205C019D0C0A50001B3A4 /* HockeySDKResources.bundle in Resources */,
 				5BC9C1CB19C9DCED0071BDA4 /* gear@2x.png in Resources */,
 				5B4205BF19D0C0A50001B3A4 /* HockeySDK.xcconfig in Resources */,
@@ -354,6 +374,7 @@
 				5B8E52B519C8511000797C47 /* AppDelegate.m in Sources */,
 				5B8E52EB19C875CC00797C47 /* ListCell.m in Sources */,
 				5B8E52B219C8511000797C47 /* main.m in Sources */,
+				5B41798119D17E2700DCCD56 /* PreferenceViewController.m in Sources */,
 				5B80E23B19CAD09600834681 /* StatusViewController.m in Sources */,
 				5B8E52D719C852CB00797C47 /* ListViewController.m in Sources */,
 				5B8E52DA19C8542700797C47 /* DetailViewController.m in Sources */,
@@ -485,6 +506,7 @@
 					"$(PROJECT_DIR)/HockeySDK-iOS/HockeySDK.embeddedframework",
 				);
 				INFOPLIST_FILE = SharedList/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -501,6 +523,7 @@
 					"$(PROJECT_DIR)/HockeySDK-iOS/HockeySDK.embeddedframework",
 				);
 				INFOPLIST_FILE = SharedList/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
