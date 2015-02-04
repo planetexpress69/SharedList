@@ -14,6 +14,10 @@
 // ---------------------------------------------------------------------------------------------------------------------
 @property (nonatomic, assign, getter = isDirty) BOOL                dirty;
 @property (nonatomic, strong)                   UIBarButtonItem     *saveButton;
+@property (nonatomic, strong)                   NSString            *sTempTitle;
+@property (nonatomic, strong)                   NSNumber            *nTempPrice;
+@property (nonatomic, strong)                   NSString            *sTempDate;
+
 // ---------------------------------------------------------------------------------------------------------------------
 @end
 
@@ -51,7 +55,6 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (void)dealloc
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -66,6 +69,9 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    self.sTempDate = nil;
+    self.sTempTitle = nil;
+    self.nTempPrice = nil;
 }
 
 
@@ -152,26 +158,32 @@
 
             switch (indexPath.row) {
                 case 0: {
-                    self.itemTitleCell.dataField.text           = @"";
+                    self.itemTitleCell.dataField.text           = self.sTempTitle != nil ? self.sTempTitle : @"";
                     self.itemTitleCell.dataField.placeholder    = @"Blumenkohl";
                     return self.itemTitleCell;
                 }
                     break;
                 case 1: {
-                    self.itemPriceCell.dataField.text           = @"";
+                    self.itemPriceCell.dataField.text           = self.nTempPrice != nil ? [NSString stringWithFormat:@"%.2f", self.nTempPrice.floatValue] : @"";
                     self.itemPriceCell.dataField.placeholder    = @"1.95";
                     return self.itemPriceCell;
                 }
                     break;
                 default: {
-                    NSDate *now = [NSDate date];
-                    NSDateFormatter *formatter                  = [[NSDateFormatter alloc] init];
-                    [formatter setDateFormat:@"dd.MM.yyyy"];
-                    //[formatter setTimeZone:[NSTimeZone timeZoneWithName:@"..."]];
-                    NSString *stringFromDate                    = [formatter stringFromDate:now];
-                    self.itemDateCell.dataField.text            = stringFromDate;
-                    self.itemDateCell.dataField.placeholder     = @"06.07.2014";
-                    return self.itemDateCell;
+                    if (self.sTempDate == nil) {
+                        NSDate *now = [NSDate date];
+                        NSDateFormatter *formatter                  = [[NSDateFormatter alloc] init];
+                        [formatter setDateFormat:@"dd.MM.yyyy"];
+                        //[formatter setTimeZone:[NSTimeZone timeZoneWithName:@"..."]];
+                        NSString *stringFromDate                    = [formatter stringFromDate:now];
+                        self.itemDateCell.dataField.text            = stringFromDate;
+                        self.itemDateCell.dataField.placeholder     = @"06.07.2014";
+                        return self.itemDateCell;
+                    }
+                    else {
+                        self.itemDateCell.dataField.text = self.sTempDate;
+                        return self.itemDateCell;
+                    }
                 }
                     break;
             }
@@ -247,14 +259,18 @@
         UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
         NSString *sCurrentUser = cell.textLabel.text;
 
+        self.sTempTitle = self.itemTitleCell.dataField.text;
+        self.nTempPrice = [NSNumber numberWithFloat: [self.itemPriceCell.dataField.text stringByReplacingOccurrencesOfString:@"," withString:@"."].floatValue];
+        self.sTempDate  = self.itemDateCell.dataField.text;
+
         if ([sCurrentUser isEqualToString:@"Birte"]) {
-            [[NSUserDefaults standardUserDefaults]setObject:@"Jens" forKey:@"user"];
+            [[NSUserDefaults standardUserDefaults] setObject:@"Jens" forKey:@"user"];
         }
         else {
-            [[NSUserDefaults standardUserDefaults]setObject:@"Birte" forKey:@"user"];
+            [[NSUserDefaults standardUserDefaults] setObject:@"Birte" forKey:@"user"];
         }
 
-        [[NSUserDefaults standardUserDefaults]synchronize];
+        [[NSUserDefaults standardUserDefaults] synchronize];
         [self.tableView reloadData];
     }
 }

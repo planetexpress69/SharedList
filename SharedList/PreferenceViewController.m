@@ -13,6 +13,7 @@
 
 @interface PreferenceViewController ()
 // ---------------------------------------------------------------------------------------------------------------------
+@property (nonatomic, assign, getter=isDirty) BOOL dirty;
 // ---------------------------------------------------------------------------------------------------------------------
 @end
 
@@ -24,7 +25,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.title = @"Einstellungen";
+    self.title                          = @"Einstellungen";
+    self.theEndpointTextField.delegate  = self;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -32,6 +34,22 @@
 {
     [super viewWillAppear:animated];
     self.theEndpointTextField.text = [[NSUserDefaults standardUserDefaults]objectForKey:@"syncpoint"];
+    self.dirty = NO;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    if ([self.theEndpointTextField isFirstResponder]) {
+        [self.theEndpointTextField resignFirstResponder];
+    }
+    if (self.isDirty) {
+        NSString *sUrl = self.theEndpointTextField.text;
+        [[NSUserDefaults standardUserDefaults]setObject:sUrl forKey:@"syncpoint"];
+        [[NSUserDefaults standardUserDefaults]synchronize];
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"EndpointDidChangeNotification" object:nil];
+    }
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -111,4 +129,17 @@
 }
 
 
+// ---------------------------------------------------------------------------------------------------------------------
+#pragma mark - UITextFieldDelegate protocol methods
+// ---------------------------------------------------------------------------------------------------------------------
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    self.dirty = YES;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+
+}
 @end

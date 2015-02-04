@@ -14,7 +14,6 @@
 		5B41798119D17E2700DCCD56 /* PreferenceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B41798019D17E2700DCCD56 /* PreferenceViewController.m */; };
 		5B4205B819D0C0850001B3A4 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B4205B719D0C0850001B3A4 /* CoreText.framework */; };
 		5B4205BE19D0C0A50001B3A4 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B4205BA19D0C0A50001B3A4 /* HockeySDK.framework */; };
-		5B4205BF19D0C0A50001B3A4 /* HockeySDK.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 5B4205BC19D0C0A50001B3A4 /* HockeySDK.xcconfig */; };
 		5B4205C019D0C0A50001B3A4 /* HockeySDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5B4205BD19D0C0A50001B3A4 /* HockeySDKResources.bundle */; };
 		5B46C6ED19C9CE8D00E0789E /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 5BBD730119C9BFC9001870B2 /* README.md */; };
 		5B80E23B19CAD09600834681 /* StatusViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B80E23A19CAD09600834681 /* StatusViewController.m */; };
@@ -284,7 +283,7 @@
 		5B8E52A419C8511000797C47 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0600;
+				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = "JAKOTA Design Group";
 				TargetAttributes = {
 					5B8E52AB19C8511000797C47 = {
@@ -335,7 +334,6 @@
 				5B003DFF19D2EC7700142BE0 /* chevron.png in Resources */,
 				5B4205C019D0C0A50001B3A4 /* HockeySDKResources.bundle in Resources */,
 				5BC9C1CB19C9DCED0071BDA4 /* gear@2x.png in Resources */,
-				5B4205BF19D0C0A50001B3A4 /* HockeySDK.xcconfig in Resources */,
 				5BC9C1CD19C9DCED0071BDA4 /* spinner_landscape@2x.png in Resources */,
 				5BC9C1CC19C9DCED0071BDA4 /* spinner_landscape.png in Resources */,
 			);
@@ -500,6 +498,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Frameworks",
@@ -510,6 +510,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -517,6 +518,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Frameworks",
@@ -527,6 +530,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};

@@ -41,6 +41,10 @@
 
     [self.view addSubview:self.statusViewController.view];
 
+    [[NSNotificationCenter defaultCenter]addObserver:self
+                                            selector:@selector(updateSyncURL)
+                                                name:@"EndpointDidChangeNotification"
+                                              object:nil];
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
