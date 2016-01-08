@@ -59,6 +59,7 @@
                 [context rejectWithMessage: [@"invalid date " stringByAppendingString: [date description]]];
             }
         })];
+
     }
     return self;
 }
@@ -66,7 +67,7 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"59571e6955f452a88d286978ebf4ce1f"];
+    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"26fd72e47692482a823b13ba0b82069a"];
     [[BITHockeyManager sharedHockeyManager] startManager];
     [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
 
@@ -143,24 +144,27 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (void)setupUI
 {
-    UIFont *titleFont       = [UIFont fontWithName:@"HelveticaNeue-Light" size:20.0f];
+    UIFont *titleFont       = [UIFont fontWithName:@"HelveticaNeue-Light" size:24.0f];
     UIFont *barButtonFont   = [UIFont fontWithName:@"HelveticaNeue-Light" size:14.0f];
 
     //[[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:1.0 green:0.3 blue:0.0 alpha:.8]];
+    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+
 
     [[UINavigationBar appearance] setTitleTextAttributes:@{
-                                                           NSForegroundColorAttributeName   : [UIColor blackColor],
+                                                           NSForegroundColorAttributeName   : [UIColor whiteColor],
                                                            NSFontAttributeName              : titleFont
                                                            }];
 
     [[UIBarButtonItem appearance] setTitleTextAttributes:@{
-                                                           NSForegroundColorAttributeName   : [UIColor blackColor],
+                                                           NSForegroundColorAttributeName   : [UIColor whiteColor],
                                                            NSFontAttributeName              : barButtonFont
                                                            }
                                                 forState:UIControlStateNormal];
 
     [[UIBarButtonItem appearance] setTitleTextAttributes:@{
-                                                           NSForegroundColorAttributeName   : [UIColor grayColor],
+                                                           NSForegroundColorAttributeName   : [UIColor lightGrayColor],
                                                            NSFontAttributeName              : barButtonFont
                                                            }
                                                 forState:UIControlStateDisabled];

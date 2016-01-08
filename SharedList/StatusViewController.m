@@ -26,10 +26,16 @@
 
     [self.view setUserInteractionEnabled:YES];
     [self.view addGestureRecognizer:panGesture];
-    self.view.backgroundColor = [UIColor colorWithWhite:.8 alpha:1.0];
+    self.view.backgroundColor = [UIColor redColor];
 
     self.tinyTriangle.image = [UIImage imageNamed:@"chevron"];
     self.tinyTriangle.backgroundColor = [UIColor clearColor];
+    self.sumTitleLabel.textColor = [UIColor whiteColor];
+    self.sumValueLabel.textColor = [UIColor whiteColor];
+    self.us1TitleLabel.textColor = [UIColor whiteColor];
+    self.us1ValueLabel.textColor = [UIColor whiteColor];
+    self.us2TitleLabel.textColor = [UIColor whiteColor];
+    self.us2ValueLabel.textColor = [UIColor whiteColor];
 }
 
 - (void)didReceiveMemoryWarning

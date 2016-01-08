@@ -27,29 +27,36 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
+  [super viewDidLoad];
 
-    self.saveButton = [[UIBarButtonItem alloc]initWithTitle:@"Save"
-                                                      style:UIBarButtonItemStylePlain
-                                                     target:self
-                                                     action:@selector(save:)];
-    
-    self.navigationItem.rightBarButtonItem          = self.saveButton;
-    self.navigationItem.rightBarButtonItem.enabled  = NO;
+  self.saveButton = [[UIBarButtonItem alloc]initWithTitle:@"Save"
+                                                    style:UIBarButtonItemStylePlain
+                                                   target:self
+                                                   action:@selector(save:)];
 
-    self.itemTitleCell.dataField.delegate           = self;
-    self.itemPriceCell.dataField.delegate           = self;
-    self.itemDateCell.dataField.delegate            = self;
-    self.itemTitleCell.selectionStyle               = UITableViewCellSelectionStyleNone;
-    self.itemPriceCell.selectionStyle               = UITableViewCellSelectionStyleNone;
-    self.itemDateCell.selectionStyle                = UITableViewCellSelectionStyleNone;
+  self.navigationItem.rightBarButtonItem          = self.saveButton;
+  self.navigationItem.rightBarButtonItem.enabled  = NO;
+
+  self.itemTitleCell.dataField.delegate           = self;
+  self.itemPriceCell.dataField.delegate           = self;
+  self.itemDateCell.dataField.delegate            = self;
+  self.itemTitleCell.selectionStyle               = UITableViewCellSelectionStyleNone;
+  self.itemPriceCell.selectionStyle               = UITableViewCellSelectionStyleNone;
+  self.itemDateCell.selectionStyle                = UITableViewCellSelectionStyleNone;
+
+  self.itemTitleCell.dataField.autocorrectionType = UITextAutocorrectionTypeNo;
+  self.itemPriceCell.dataField.autocorrectionType = UITextAutocorrectionTypeNo;
+  self.itemDateCell.dataField.autocorrectionType  = UITextAutocorrectionTypeNo;
+  [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor], NSForegroundColorAttributeName,nil]];
+  [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
 - (void)didReceiveMemoryWarning
 {
-    [super didReceiveMemoryWarning];
-    self.database = nil;
+  [super didReceiveMemoryWarning];
+  self.database = nil;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -60,18 +67,18 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (void)viewWillAppear:(BOOL)animated
 {
-    [super viewWillAppear:animated];
-    self.title = self.mode == DetailControllerModeAdd ? @"Add" : @"Edt";
-    self.dirty = NO;
+  [super viewWillAppear:animated];
+  self.title = self.mode == DetailControllerModeAdd ? @"Add" : @"Edt";
+  self.dirty = NO;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
 - (void)viewWillDisappear:(BOOL)animated
 {
-    [super viewWillDisappear:animated];
-    self.sTempDate = nil;
-    self.sTempTitle = nil;
-    self.nTempPrice = nil;
+  [super viewWillDisappear:animated];
+  self.sTempDate = nil;
+  self.sTempTitle = nil;
+  self.nTempPrice = nil;
 }
 
 
@@ -80,56 +87,57 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (void)save
 {
-    if (self.record) { // --- edit existing ----------------------------------------------------------------------------
+  if (self.record) { // --- edit existing ----------------------------------------------------------------------------
 
-        if (!self.isDirty) {
-            // record seems to be unchanged, so: bailing out!
-            return;
-        }
-
-        if (self.itemTitleCell.dataField.text.length == 0 || self.itemPriceCell.dataField.text.length == 0) {
-            // no title or no price, so: bailing out!
-            return;
-        }
-
-        NSMutableDictionary *mutableProps = [self.record.properties mutableCopy];
-        mutableProps[@"item"]   = self.itemTitleCell.dataField.text;
-        mutableProps[@"price"]  = [NSNumber numberWithFloat:
-                                  [self.itemPriceCell.dataField.text
-                                   stringByReplacingOccurrencesOfString:@"," withString:@"."].floatValue];
-        mutableProps[@"user"]   = [[NSUserDefaults standardUserDefaults]objectForKey:@"user"];
-        mutableProps[@"date"]   = self.itemDateCell.dataField.text;
-
-        NSError* error;
-        if (![self.record putProperties:mutableProps error:&error]) {
-            NSLog(@"Error! %@", error.localizedDescription);
-        }
+    if (!self.isDirty) {
+      // record seems to be unchanged, so: bailing out!
+      return;
     }
-    else { // --- add new ----------------------------------------------------------------------------------------------
 
-        if (self.itemTitleCell.dataField.text.length == 0 || self.itemPriceCell.dataField.text.length == 0) {
-            // no title or no price
-            return;
-        }
-
-        NSDictionary *props = @{
-                                @"item"         : self.itemTitleCell.dataField.text,
-                                @"price"        : [NSNumber numberWithFloat:[self.itemPriceCell.dataField.text
-                                                                      stringByReplacingOccurrencesOfString:@","
-                                                                      withString:@"."].floatValue],
-                                @"date"         : self.itemDateCell.dataField.text,
-                                @"user"         : self.itemUserCell.textLabel.text,
-                                @"check"        : @NO,
-                                @"created_at"   : [CBLJSON JSONObjectWithDate: [NSDate date]]
-                                };
-
-        CBLDocument *doc = [self.database createDocument];
-
-        NSError* error;
-        if (![doc putProperties:props error:&error]) {
-            NSLog(@"Error! %@", error.localizedDescription);
-        }
+    if (self.itemTitleCell.dataField.text.length == 0 || self.itemPriceCell.dataField.text.length == 0) {
+      // no title or no price, so: bailing out!
+      return;
     }
+
+    NSMutableDictionary *mutableProps = [self.record.properties mutableCopy];
+    mutableProps[@"item"]   = self.itemTitleCell.dataField.text;
+    mutableProps[@"price"]  = [NSNumber numberWithFloat:
+                               [self.itemPriceCell.dataField.text
+                                stringByReplacingOccurrencesOfString:@"," withString:@"."].floatValue];
+    mutableProps[@"user"]   = [[NSUserDefaults standardUserDefaults]objectForKey:@"user"];
+
+    mutableProps[@"date"]   = [CBLJSON JSONObjectWithDate:[self dateFromString:self.itemDateCell.dataField.text]];
+
+    NSError* error;
+    if (![self.record putProperties:mutableProps error:&error]) {
+      NSLog(@"Error! %@", error.localizedDescription);
+    }
+  }
+  else { // --- add new ----------------------------------------------------------------------------------------------
+
+    if (self.itemTitleCell.dataField.text.length == 0 || self.itemPriceCell.dataField.text.length == 0) {
+      // no title or no price
+      return;
+    }
+
+    NSDictionary *props = @{
+                            @"item"         : self.itemTitleCell.dataField.text,
+                            @"price"        : [NSNumber numberWithFloat:[self.itemPriceCell.dataField.text
+                                                                         stringByReplacingOccurrencesOfString:@","
+                                                                         withString:@"."].floatValue],
+                            @"date"         : [CBLJSON JSONObjectWithDate:[self dateFromString:self.itemDateCell.dataField.text]],
+                            @"user"         : self.itemUserCell.textLabel.text,
+                            @"check"        : @NO,
+                            @"created_at"   : [CBLJSON JSONObjectWithDate: [NSDate date]]
+                            };
+
+    CBLDocument *doc = [self.database createDocument];
+
+    NSError* error;
+    if (![doc putProperties:props error:&error]) {
+      NSLog(@"Error! %@", error.localizedDescription);
+    }
+  }
 }
 
 
@@ -138,106 +146,118 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2;
+  return 2;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return section == 0 ? 3 : 1;
+  return section == 0 ? 3 : 1;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // TODO: Refactor! This is all pretty experimental & spaghetti!
+  // TODO: Refactor! This is all pretty experimental & spaghetti!
 
-    if (indexPath.section == 0) {
+  if (indexPath.section == 0) {
 
-        if (self.mode == DetailControllerModeAdd) {
+    if (self.mode == DetailControllerModeAdd) {
 
-            switch (indexPath.row) {
-                case 0: {
-                    self.itemTitleCell.dataField.text           = self.sTempTitle != nil ? self.sTempTitle : @"";
-                    self.itemTitleCell.dataField.placeholder    = @"Blumenkohl";
-                    return self.itemTitleCell;
-                }
-                    break;
-                case 1: {
-                    self.itemPriceCell.dataField.text           = self.nTempPrice != nil ? [NSString stringWithFormat:@"%.2f", self.nTempPrice.floatValue] : @"";
-                    self.itemPriceCell.dataField.placeholder    = @"1.95";
-                    return self.itemPriceCell;
-                }
-                    break;
-                default: {
-                    if (self.sTempDate == nil) {
-                        NSDate *now = [NSDate date];
-                        NSDateFormatter *formatter                  = [[NSDateFormatter alloc] init];
-                        [formatter setDateFormat:@"dd.MM.yyyy"];
-                        //[formatter setTimeZone:[NSTimeZone timeZoneWithName:@"..."]];
-                        NSString *stringFromDate                    = [formatter stringFromDate:now];
-                        self.itemDateCell.dataField.text            = stringFromDate;
-                        self.itemDateCell.dataField.placeholder     = @"06.07.2014";
-                        return self.itemDateCell;
-                    }
-                    else {
-                        self.itemDateCell.dataField.text = self.sTempDate;
-                        return self.itemDateCell;
-                    }
-                }
-                    break;
-            }
+      switch (indexPath.row) {
+        case 0: {
+          self.itemTitleCell.dataField.text           = self.sTempTitle != nil ? self.sTempTitle : @"";
+          self.itemTitleCell.dataField.placeholder    = @"Blumenkohl";
+          return self.itemTitleCell;
         }
-
-        else  /* if (self.mode == DetailControllerModeEdt) */ {
-
-            NSDictionary *props = self.record.properties;
-
-            switch (indexPath.row) {
-
-                case 0: {
-                    self.itemTitleCell.dataField.text           = props[@"item"];
-                    self.itemTitleCell.dataField.placeholder    = @"Blumenkohl";
-                    self.itemTitleCell.dataField.keyboardType   = UIKeyboardTypeDefault;
-                    self.itemTitleCell.dataField.delegate       = self;
-                    return self.itemTitleCell;
-                }
-                    break;
-
-                case 1: {
-                    self.itemPriceCell.dataField.text           = [NSString stringWithFormat:@"%.2f", ((NSNumber *)props[@"price"]).floatValue];
-                    self.itemPriceCell.dataField.placeholder    = @"1.95";
-                    self.itemPriceCell.dataField.keyboardType   = UIKeyboardTypeNumbersAndPunctuation;
-                    self.itemPriceCell.dataField.delegate       = self;
-                    return self.itemPriceCell;
-                }
-                    break;
-
-                default: {
-                    NSString *s = nil;
-                    if (((NSString *)props[@"date"]).length == 0) {
-                        NSDate *now                             = [NSDate date];
-                        NSDateFormatter *formatter              = [[NSDateFormatter alloc] init];
-                        [formatter setDateFormat:@"dd.MM.yyyy"];
-                        //[formatter setTimeZone:[NSTimeZone timeZoneWithName:@"..."]];
-                        s                                       = [formatter stringFromDate:now];
-                    } else {
-                        s                                       = [NSString stringWithFormat:@"%@", props[@"date"]];
-                    }
-                    self.itemDateCell.dataField.text            = s;
-                    self.itemDateCell.dataField.placeholder     = @"06.07.2014";
-                    self.itemDateCell.dataField.keyboardType    = UIKeyboardTypeNumbersAndPunctuation;
-                    self.itemDateCell.dataField.delegate        = self;
-                    return self.itemDateCell;
-                }
-                    break;
-            }
+          break;
+        case 1: {
+          self.itemPriceCell.dataField.text           = self.nTempPrice != nil ? [NSString stringWithFormat:@"%.2f", self.nTempPrice.floatValue] : @"";
+          self.itemPriceCell.dataField.placeholder    = @"1.95";
+          return self.itemPriceCell;
         }
+          break;
+        default: {
+
+          if (self.sTempDate == nil) {
+
+            NSDate *now = [NSDate date];
+            NSDateFormatter *formatter                  = [[NSDateFormatter alloc] init];
+            [formatter setDateFormat:@"dd.MM.yyyy"];
+            //[formatter setTimeZone:[NSTimeZone timeZoneWithName:@"..."]];
+            NSString *stringFromDate                    = [formatter stringFromDate:now];
+            self.itemDateCell.dataField.text            = stringFromDate;
+
+            self.itemDateCell.dataField.placeholder     = @"06.07.2014";
+
+            return self.itemDateCell;
+
+          }
+          else {
+
+            self.itemDateCell.dataField.text = self.sTempDate;
+            return self.itemDateCell;
+          }
+        }
+          break;
+      }
     }
-    else {
-        self.itemUserCell.textLabel.text = [self defaultUser];
-        return self.itemUserCell;
+
+    else  /* if (self.mode == DetailControllerModeEdt) */ {
+
+      NSDictionary *props = self.record.properties;
+
+      switch (indexPath.row) {
+
+        case 0: {
+          self.itemTitleCell.dataField.text           = props[@"item"];
+          self.itemTitleCell.dataField.placeholder    = @"Blumenkohl";
+          self.itemTitleCell.dataField.keyboardType   = UIKeyboardTypeDefault;
+          self.itemTitleCell.dataField.delegate       = self;
+          return self.itemTitleCell;
+        }
+          break;
+
+        case 1: {
+          self.itemPriceCell.dataField.text           = [NSString stringWithFormat:@"%.2f", ((NSNumber *)props[@"price"]).floatValue];
+          self.itemPriceCell.dataField.placeholder    = @"1.95";
+          self.itemPriceCell.dataField.keyboardType   = UIKeyboardTypeNumbersAndPunctuation;
+          self.itemPriceCell.dataField.delegate       = self;
+          return self.itemPriceCell;
+        }
+          break;
+
+        default: {
+
+
+          NSString *s = nil;
+          if (((NSString *)props[@"date"]).length == 0) {
+
+
+            NSDate *now                             = [NSDate date];
+            NSDateFormatter *formatter              = [[NSDateFormatter alloc] init];
+            [formatter setDateFormat:@"dd.MM.yyyy"];
+            //[formatter setTimeZone:[NSTimeZone timeZoneWithName:@"..."]];
+            s                                       = [formatter stringFromDate:now];
+          } else {
+            s                                       = [NSString stringWithFormat:@"%@", props[@"date"]];
+          }
+
+
+          self.itemDateCell.dataField.text            = s;
+          self.itemDateCell.dataField.placeholder     = @"06.07.2014";
+          self.itemDateCell.dataField.keyboardType    = UIKeyboardTypeNumbersAndPunctuation;
+          self.itemDateCell.dataField.delegate        = self;
+          return self.itemDateCell;
+        }
+          break;
+      }
     }
+  }
+  else {
+    self.itemUserCell.textLabel.text = [self defaultUser];
+    return self.itemUserCell;
+  }
 }
 
 
@@ -246,33 +266,35 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 44.0f;
+  return 44.0f;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 
-    self.dirty = YES;
+  self.dirty = YES;
+  self.navigationItem.rightBarButtonItem.enabled  = YES;
+  self.navigationItem.rightBarButtonItem.style    = UIBarButtonItemStyleDone;
 
-    if (indexPath.section == 1) {
-        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-        NSString *sCurrentUser = cell.textLabel.text;
+  if (indexPath.section == 1) {
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    NSString *sCurrentUser = cell.textLabel.text;
 
-        self.sTempTitle = self.itemTitleCell.dataField.text;
-        self.nTempPrice = [NSNumber numberWithFloat: [self.itemPriceCell.dataField.text stringByReplacingOccurrencesOfString:@"," withString:@"."].floatValue];
-        self.sTempDate  = self.itemDateCell.dataField.text;
+    self.sTempTitle = self.itemTitleCell.dataField.text;
+    self.nTempPrice = [NSNumber numberWithFloat: [self.itemPriceCell.dataField.text stringByReplacingOccurrencesOfString:@"," withString:@"."].floatValue];
+    self.sTempDate  = self.itemDateCell.dataField.text;
 
-        if ([sCurrentUser isEqualToString:@"Birte"]) {
-            [[NSUserDefaults standardUserDefaults] setObject:@"Jens" forKey:@"user"];
-        }
-        else {
-            [[NSUserDefaults standardUserDefaults] setObject:@"Birte" forKey:@"user"];
-        }
-
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        [self.tableView reloadData];
+    if ([sCurrentUser isEqualToString:@"Birte"]) {
+      [[NSUserDefaults standardUserDefaults] setObject:@"Jens" forKey:@"user"];
     }
+    else {
+      [[NSUserDefaults standardUserDefaults] setObject:@"Birte" forKey:@"user"];
+    }
+
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    [self.tableView reloadData];
+  }
 }
 
 
@@ -281,11 +303,11 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (CBLDatabase *)database
 {
-    if (_database == nil) {
-        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        _database = appDelegate.database;
-    }
-    return _database;
+  if (_database == nil) {
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    _database = appDelegate.database;
+  }
+  return _database;
 }
 
 
@@ -294,7 +316,7 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (NSString *)defaultUser
 {
-    return [[NSUserDefaults standardUserDefaults] objectForKey:@"user"];
+  return [[NSUserDefaults standardUserDefaults] objectForKey:@"user"];
 }
 
 
@@ -303,9 +325,9 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-    self.dirty                                      = YES;
-    self.navigationItem.rightBarButtonItem.enabled  = YES;
-    self.navigationItem.rightBarButtonItem.style    = UIBarButtonItemStyleDone;
+  self.dirty                                      = YES;
+  self.navigationItem.rightBarButtonItem.enabled  = YES;
+  self.navigationItem.rightBarButtonItem.style    = UIBarButtonItemStyleDone;
 }
 
 
@@ -314,7 +336,17 @@
 // ---------------------------------------------------------------------------------------------------------------------
 - (IBAction)save:(id)sender
 {
-    [self save];
-    [self.navigationController popViewControllerAnimated:YES];
+  [self save];
+  [self.navigationController popViewControllerAnimated:YES];
 }
+
+- (NSDate *)dateFromString:(NSString *)sDate
+{
+  NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+  [dateFormat setDateFormat:@"dd.MM.yyyy"];
+  NSDate *date = [dateFormat dateFromString:sDate];
+
+  return date;
+}
+
 @end
