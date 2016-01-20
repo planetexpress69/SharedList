@@ -1,0 +1,17 @@
+PODS:
+  - couchbase-lite-ios (1.0.3)
+  - HockeySDK (3.8.5):
+    - HockeySDK/AllFeaturesLib (= 3.8.5)
+  - HockeySDK/AllFeaturesLib (3.8.5)
+
+DEPENDENCIES:
+  - couchbase-lite-ios (= 1.0.3)
+  - HockeySDK
+
+SPEC CHECKSUMS:
+  couchbase-lite-ios: 2d1595e400024304d4d2ab895f2db25e50170c33
+  HockeySDK: dd11a2b9da3372fd025643bee5bc10c8c613d169
+
+PODFILE CHECKSUM: ae97ab8ac8da12005084e05e21f2ca4ac29ebc1e
+
+COCOAPODS: 1.0.0.beta.2
