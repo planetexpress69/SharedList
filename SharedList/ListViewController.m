@@ -167,13 +167,10 @@
   cell.itemNameLabel.text     = props[@"item"];
   cell.spenderLabel.text      = props[@"user"];
 
-  NSLog(@" > %@", props[@"date"]);
-
-
   if ([props[@"date"]length] > 10) {
     cell.dateLabel.text = [self makeTinyDate:props[@"date"]];
-
-  } else {
+  }
+  else {
     cell.dateLabel.text         = props[@"date"];
   }
 
@@ -186,7 +183,6 @@
 - (void)couchTableSource:(CBLUITableSource*)source
      willUpdateFromQuery:(CBLLiveQuery*)query
 {
-  NSLog(@"couchTableSource:willUpdateFromQuery");
   [self updateStatusView];
 }
 

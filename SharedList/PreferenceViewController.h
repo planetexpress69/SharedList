@@ -13,6 +13,7 @@
 @interface PreferenceViewController : UIViewController <UIAlertViewDelegate, UITextFieldDelegate>
 // ---------------------------------------------------------------------------------------------------------------------
 @property (nonatomic, weak)     IBOutlet    UITextField     *theEndpointTextField;
+@property (nonatomic, weak)     IBOutlet    UITextView      *theAboutTextView;
 @property (strong, nonatomic)               CBLDatabase     *database;
 // ---------------------------------------------------------------------------------------------------------------------
 @end

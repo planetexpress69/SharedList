@@ -126,7 +126,6 @@
     if (error) {
         message = [NSString stringWithFormat: @"%@\n\n%@", message, error.localizedDescription];
     }
-    NSLog(@"ALERT: %@ (error=%@)", message, error);
     UIAlertView* alert = [[UIAlertView alloc] initWithTitle: (fatal ? @"Fatal Error" : @"Error")
                                                     message: message
                                                    delegate: (fatal ? self : nil)

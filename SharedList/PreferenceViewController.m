@@ -9,6 +9,7 @@
 #import "PreferenceViewController.h"
 #import "AppDelegate.h"
 #import <CouchbaseLite/CouchbaseLite.h>
+#import "ResourceProvider.h"
 
 
 @interface PreferenceViewController ()
@@ -27,6 +28,7 @@
     // Do any additional setup after loading the view.
     self.title                          = @"Einstellungen";
     self.theEndpointTextField.delegate  = self;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateAboutBox) name:@"ResourceDictDidChange" object:nil];
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -35,6 +37,8 @@
     [super viewWillAppear:animated];
     self.theEndpointTextField.text = [[NSUserDefaults standardUserDefaults]objectForKey:@"syncpoint"];
     self.dirty = NO;
+
+    self.theAboutTextView.text = [[ResourceProvider sharedInstance] theRecourceDictionary][@"aboutText"];
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -141,5 +145,10 @@
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
 
+}
+
+- (void)updateAboutBox {
+    NSLog(@"Updating about box...");
+    self.theAboutTextView.text = [[ResourceProvider sharedInstance]theRecourceDictionary][@"aboutText"];
 }
 @end

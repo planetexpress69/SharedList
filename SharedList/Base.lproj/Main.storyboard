@@ -292,35 +292,50 @@
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tvX-Y3-etz">
-                                <rect key="frame" x="240" y="550" width="121" height="30"/>
+                                <rect key="frame" x="195" y="550" width="211" height="30"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="121" id="Lhc-mz-C8i"/>
+                                    <constraint firstAttribute="height" constant="30" id="1bG-v3-JG7"/>
+                                    <constraint firstAttribute="width" constant="211" id="bSa-v6-jMr"/>
                                 </constraints>
                                 <state key="normal" title="Delete current list">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <connections>
                                     <action selector="triggerDelete:" destination="ODd-KM-Tt5" eventType="touchUpInside" id="rll-Vn-XBG"/>
                                 </connections>
                             </button>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="8v4-da-y2u">
+                                <rect key="frame" x="20" y="173" width="560" height="369"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="tvX-Y3-etz" firstAttribute="centerX" secondItem="vYX-qc-Gx2" secondAttribute="centerX" id="H8l-ir-XFU"/>
+                            <constraint firstAttribute="bottom" secondItem="tvX-Y3-etz" secondAttribute="bottom" constant="20" symbolic="YES" id="HEw-Xj-93a"/>
                             <constraint firstAttribute="trailing" secondItem="vYX-qc-Gx2" secondAttribute="trailing" id="I2m-7M-tDB"/>
-                            <constraint firstItem="ry0-2O-bjI" firstAttribute="top" secondItem="tvX-Y3-etz" secondAttribute="bottom" constant="20" id="Lmo-Lr-Hff"/>
+                            <constraint firstItem="8v4-da-y2u" firstAttribute="leading" secondItem="q7c-Gs-ueP" secondAttribute="leading" constant="20" id="JYD-7e-dJZ"/>
                             <constraint firstItem="loT-un-MUG" firstAttribute="top" secondItem="jAW-Ih-F9C" secondAttribute="bottom" constant="8" id="ONX-uU-s3U"/>
                             <constraint firstItem="vYX-qc-Gx2" firstAttribute="top" secondItem="loT-un-MUG" secondAttribute="bottom" constant="8" id="Vdh-af-oWN"/>
                             <constraint firstAttribute="trailing" secondItem="loT-un-MUG" secondAttribute="trailing" constant="16" id="WzZ-Ai-m9G"/>
+                            <constraint firstItem="tvX-Y3-etz" firstAttribute="centerX" secondItem="vYX-qc-Gx2" secondAttribute="centerX" id="Z2x-yP-O9k"/>
+                            <constraint firstItem="tvX-Y3-etz" firstAttribute="top" secondItem="8v4-da-y2u" secondAttribute="bottom" constant="8" id="bsg-C1-iTt"/>
                             <constraint firstItem="loT-un-MUG" firstAttribute="leading" secondItem="q7c-Gs-ueP" secondAttribute="leading" constant="16" id="gmu-ja-P6y"/>
                             <constraint firstItem="vYX-qc-Gx2" firstAttribute="leading" secondItem="q7c-Gs-ueP" secondAttribute="leading" id="i6F-iJ-pPm"/>
+                            <constraint firstItem="8v4-da-y2u" firstAttribute="top" secondItem="vYX-qc-Gx2" secondAttribute="bottom" constant="8" id="iNA-hl-hl7"/>
+                            <constraint firstItem="ry0-2O-bjI" firstAttribute="top" secondItem="tvX-Y3-etz" secondAttribute="bottom" constant="20" id="oPI-rX-76g"/>
+                            <constraint firstAttribute="trailing" secondItem="8v4-da-y2u" secondAttribute="trailing" constant="20" id="xFJ-4F-jv2"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="bmA-oN-b4h"/>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
-                        <outlet property="theEndpointTextField" destination="loT-un-MUG" id="P4r-VW-mWz"/>
+                        <outlet property="theAboutTextView" destination="8v4-da-y2u" id="3Qw-Nv-k0T"/>
+                        <outlet property="theEndpointTextField" destination="loT-un-MUG" id="HEo-hc-qsL"/>
+                        <outlet property="view" destination="q7c-Gs-ueP" id="geg-oE-UfP"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9TF-na-8M0" userLabel="First Responder" sceneMemberID="firstResponder"/>

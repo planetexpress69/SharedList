@@ -12,6 +12,7 @@
 		5B003E0019D2EC7700142BE0 /* chevron@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B003DFD19D2EC7700142BE0 /* chevron@2x.png */; };
 		5B003E0119D2EC7700142BE0 /* chevron@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B003DFE19D2EC7700142BE0 /* chevron@3x.png */; };
 		5B08AA3F19C98BF3004DD968 /* DataEntryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B08AA3E19C98BF3004DD968 /* DataEntryCell.m */; };
+		5B3ABB121C50E41000D72B3A /* ResourceProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B3ABB111C50E41000D72B3A /* ResourceProvider.m */; };
 		5B41798119D17E2700DCCD56 /* PreferenceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B41798019D17E2700DCCD56 /* PreferenceViewController.m */; };
 		5B4205B819D0C0850001B3A4 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B4205B719D0C0850001B3A4 /* CoreText.framework */; };
 		5B4205BE19D0C0A50001B3A4 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B4205BA19D0C0A50001B3A4 /* HockeySDK.framework */; };
@@ -46,6 +47,8 @@
 		5B01A02B19D19F72008DE537 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		5B08AA3D19C98BF3004DD968 /* DataEntryCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataEntryCell.h; sourceTree = "<group>"; };
 		5B08AA3E19C98BF3004DD968 /* DataEntryCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataEntryCell.m; sourceTree = "<group>"; };
+		5B3ABB101C50E41000D72B3A /* ResourceProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResourceProvider.h; sourceTree = "<group>"; };
+		5B3ABB111C50E41000D72B3A /* ResourceProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResourceProvider.m; sourceTree = "<group>"; };
 		5B41797F19D17E2700DCCD56 /* PreferenceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreferenceViewController.h; sourceTree = "<group>"; };
 		5B41798019D17E2700DCCD56 /* PreferenceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreferenceViewController.m; sourceTree = "<group>"; };
 		5B4205B519D0C0790001B3A4 /* CarrierBundleUtilities.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = CarrierBundleUtilities.dylib; path = usr/lib/CarrierBundleUtilities.dylib; sourceTree = SDKROOT; };
@@ -175,6 +178,8 @@
 				5B08AA3E19C98BF3004DD968 /* DataEntryCell.m */,
 				5B80E23919CAD09500834681 /* StatusViewController.h */,
 				5B80E23A19CAD09600834681 /* StatusViewController.m */,
+				5B3ABB101C50E41000D72B3A /* ResourceProvider.h */,
+				5B3ABB111C50E41000D72B3A /* ResourceProvider.m */,
 			);
 			path = SharedList;
 			sourceTree = "<group>";
@@ -367,6 +372,7 @@
 				5B41798119D17E2700DCCD56 /* PreferenceViewController.m in Sources */,
 				5B80E23B19CAD09600834681 /* StatusViewController.m in Sources */,
 				5B8E52D719C852CB00797C47 /* ListViewController.m in Sources */,
+				5B3ABB121C50E41000D72B3A /* ResourceProvider.m in Sources */,
 				5B8E52DA19C8542700797C47 /* DetailViewController.m in Sources */,
 				5B08AA3F19C98BF3004DD968 /* DataEntryCell.m in Sources */,
 			);
