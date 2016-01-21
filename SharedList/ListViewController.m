@@ -427,7 +427,6 @@
   [shrtFormatter setDateFormat:@"dd.MM.yyyy"];
 
   NSDate *date = [longFormatter dateFromString:largeDate];
-  NSLog(@"         > %@", date);
   return [shrtFormatter stringFromDate:date];
 }
 @end

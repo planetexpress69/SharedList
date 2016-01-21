@@ -228,24 +228,19 @@
           break;
 
         default: {
-
-
-          NSString *s = nil;
-          if (((NSString *)props[@"date"]).length == 0) {
-
-
-            NSDate *now                             = [NSDate date];
-            NSDateFormatter *formatter              = [[NSDateFormatter alloc] init];
+            NSString *s = nil;
+            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
             [formatter setDateFormat:@"dd.MM.yyyy"];
-            //[formatter setTimeZone:[NSTimeZone timeZoneWithName:@"..."]];
+          if (((NSString *)props[@"date"]).length == 0) {
+            NSDate *now                             = [NSDate date];
             s                                       = [formatter stringFromDate:now];
           } else {
-            s                                       = [NSString stringWithFormat:@"%@", props[@"date"]];
+            s                                       = [self makeTinyDate:props[@"date"]];
           }
 
 
           self.itemDateCell.dataField.text            = s;
-          self.itemDateCell.dataField.placeholder     = @"06.07.2014";
+          self.itemDateCell.dataField.placeholder     = [formatter stringFromDate:[NSDate date]];
           self.itemDateCell.dataField.keyboardType    = UIKeyboardTypeNumbersAndPunctuation;
           self.itemDateCell.dataField.delegate        = self;
           return self.itemDateCell;
@@ -348,5 +343,16 @@
 
   return date;
 }
+
+- (NSString *)makeTinyDate:(NSString *)largeDate {
+    NSDateFormatter *longFormatter = [[NSDateFormatter alloc]init];
+    [longFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSSZ"];
+    NSDateFormatter *shrtFormatter = [[NSDateFormatter alloc]init];
+    [shrtFormatter setDateFormat:@"dd.MM.yyyy"];
+
+    NSDate *date = [longFormatter dateFromString:largeDate];
+    return [shrtFormatter stringFromDate:date];
+}
+
 
 @end

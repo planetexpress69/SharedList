@@ -60,6 +60,8 @@
             }
         })];
 
+        [[UITextField appearance] setTintColor:[UIColor blackColor]];
+
     }
     return self;
 }
