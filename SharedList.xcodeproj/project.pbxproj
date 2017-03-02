@@ -15,7 +15,6 @@
 		5B3ABB121C50E41000D72B3A /* ResourceProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B3ABB111C50E41000D72B3A /* ResourceProvider.m */; };
 		5B41798119D17E2700DCCD56 /* PreferenceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B41798019D17E2700DCCD56 /* PreferenceViewController.m */; };
 		5B4205B819D0C0850001B3A4 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B4205B719D0C0850001B3A4 /* CoreText.framework */; };
-		5B4205BE19D0C0A50001B3A4 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B4205BA19D0C0A50001B3A4 /* HockeySDK.framework */; };
 		5B46C6ED19C9CE8D00E0789E /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 5BBD730119C9BFC9001870B2 /* README.md */; };
 		5B80E23B19CAD09600834681 /* StatusViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B80E23A19CAD09600834681 /* StatusViewController.m */; };
 		5B8E52B219C8511000797C47 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B8E52B119C8511000797C47 /* main.m */; };
@@ -97,7 +96,6 @@
 			files = (
 				5B4205B819D0C0850001B3A4 /* CoreText.framework in Frameworks */,
 				5B8E52E719C85B3E00797C47 /* SystemConfiguration.framework in Frameworks */,
-				5B4205BE19D0C0A50001B3A4 /* HockeySDK.framework in Frameworks */,
 				5B8E52E519C85B3600797C47 /* libsqlite3.dylib in Frameworks */,
 				5B8E52E319C85B2D00797C47 /* libz.dylib in Frameworks */,
 				5B8E52E119C85B2200797C47 /* CouchbaseLite.framework in Frameworks */,
@@ -225,13 +223,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5B8E52CF19C8511000797C47 /* Build configuration list for PBXNativeTarget "SharedList" */;
 			buildPhases = (
-				4C76545D49E257E6C87AA386 /* Check Pods Manifest.lock */,
+				4C76545D49E257E6C87AA386 /* [CP] Check Pods Manifest.lock */,
 				5B8E52A819C8511000797C47 /* Sources */,
 				5B8E52A919C8511000797C47 /* Frameworks */,
 				5B8E52AA19C8511000797C47 /* Resources */,
 				5B4205B419D0C0530001B3A4 /* ShellScript */,
-				BCEF98831D1DCBC5B7612416 /* Embed Pods Frameworks */,
-				91E9670ADE06AE9066FEA796 /* Copy Pods Resources */,
+				BCEF98831D1DCBC5B7612416 /* [CP] Embed Pods Frameworks */,
+				91E9670ADE06AE9066FEA796 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -248,12 +246,13 @@
 		5B8E52A419C8511000797C47 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0720;
+				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = "JAKOTA Design Group";
 				TargetAttributes = {
 					5B8E52AB19C8511000797C47 = {
 						CreatedOnToolsVersion = 6.0;
 						DevelopmentTeam = UQ24M9LT38;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -301,19 +300,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		4C76545D49E257E6C87AA386 /* Check Pods Manifest.lock */ = {
+		4C76545D49E257E6C87AA386 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check Pods Manifest.lock";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		5B4205B419D0C0530001B3A4 /* ShellScript */ = {
@@ -329,14 +328,14 @@
 			shellPath = /bin/sh;
 			shellScript = "FILE=\"${SRCROOT}/HockeySDK-iOS/BuildAgent\"\nif [ -f \"$FILE\" ]; then\n\"$FILE\"\nfi";
 		};
-		91E9670ADE06AE9066FEA796 /* Copy Pods Resources */ = {
+		91E9670ADE06AE9066FEA796 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -344,14 +343,14 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SharedList/Pods-SharedList-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		BCEF98831D1DCBC5B7612416 /* Embed Pods Frameworks */ = {
+		BCEF98831D1DCBC5B7612416 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Embed Pods Frameworks";
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -413,8 +412,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -423,6 +424,7 @@
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -455,8 +457,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -464,6 +468,7 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -482,9 +487,10 @@
 			baseConfigurationReference = 8EE304863DC3B1F2CC607988 /* Pods-SharedList.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = UQ24M9LT38;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)";
@@ -496,6 +502,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "de.jakota.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Debug;
 		};
@@ -504,9 +511,10 @@
 			baseConfigurationReference = E37297881D0298020732C5B3 /* Pods-SharedList.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = UQ24M9LT38;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)";
@@ -518,6 +526,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "de.jakota.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Release;
 		};
